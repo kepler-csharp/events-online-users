@@ -1,58 +1,257 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+# 🎟️ TicketNow
+ 
+Sistema web desarrollado en **Laravel** para la compra y gestión de tickets de eventos mediante una arquitectura basada en consumo de APIs externas, utilizando autenticación **JWT** y sesiones persistentes.
+ 
+---
+ 
+## 📋 Descripción
+ 
+TicketNow es una aplicación web orientada a usuarios que desean:
+ 
+- Visualizar eventos disponibles
+- Comprar tickets
+- Gestionar reservas
+- Autenticarse mediante un gateway de autenticación
+- Mantener sesiones persistentes mediante JWT
+El proyecto funciona como cliente frontend en Laravel consumiendo endpoints externos documentados con **Swagger** mediante `Http Client`.
+ 
+---
+ 
+## 🛠️ Tecnologías utilizadas
+ 
+| Tecnología | Uso |
+|---|---|
+| Laravel | Framework principal |
+| MySQL | Base de datos |
+| Docker | Contenedores y entorno |
+| Swagger | Documentación de APIs |
+| JSON Web Token | Autenticación |
+| Bootstrap | Estilos y UI |
+| Laravel HTTP Client | Consumo de APIs externas |
+ 
+---
+ 
+## 🏗️ Arquitectura
+ 
+El proyecto utiliza una arquitectura desacoplada donde:
+ 
+- Laravel funciona como aplicación independiente frontend/backend híbrida
+- Los datos y autenticación son consumidos desde APIs externas
+- La autenticación se realiza mediante JWT
+- El token es almacenado en sesiones de Laravel
+- Las rutas protegidas utilizan middleware personalizado basado en sesiones
 ```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Laravel Application
+        │
+        ▼
+HTTP Client
+        │
+        ▼
+Swagger/API Gateway
+        │
+        ▼
+Authentication Service + Event Services
+        │
+        ▼
+MySQL
+```
+ 
+---
+ 
+## ✅ Funcionalidades
+ 
+- [x] Login de usuarios
+- [x] Registro de usuarios
+- [x] Landing page con eventos disponibles
+- [x] Gestión de reservas
+- [x] Dashboard de usuario
+- [x] Middleware personalizado para protección de rutas
+- [x] Persistencia de sesión mediante JWT
+- [x] Consumo de APIs externas
+- [x] Validación de autenticación mediante token
+- [x] Logout de sesión
+---
+ 
+## 🔐 Sistema de autenticación
+ 
+La autenticación funciona mediante:
+ 
+1. Laravel consume la API de autenticación externa
+2. La API retorna un **JWT**
+3. Laravel almacena en sesiones:
+   - `token`
+   - Datos del usuario
+4. Middleware personalizado protege rutas privadas
+5. Las solicitudes autenticadas utilizan **Bearer Token** mediante `Http Client`
+**Ejemplo:**
+ 
+```php
+$response = Http::withToken(session('auth_token'))
+    ->get($endpoint);
+```
+ 
+---
+ 
+## ⚙️ Variables de entorno necesarias
+ 
+Configurar el archivo `.env`:
+ 
+```env
+AUTH_SERVICE_URL=http://localhost:5201
+```
+ 
+---
+ 
+## 🚀 Instalación del proyecto
+ 
+### 1. Clonar repositorio
+ 
+```bash
+git clone <repository-url>
+```
+ 
+### 2. Entrar al proyecto
+ 
+```bash
+cd TicketNow
+```
+ 
+### 3. Instalar dependencias
+ 
+```bash
+composer install
+npm install
+```
+ 
+### 4. Configurar variables de entorno
+ 
+```bash
+cp .env.example .env
+```
+ 
+### 5. Generar key de Laravel
+ 
+```bash
+php artisan key:generate
+```
+ 
+### 6. Levantar contenedores Docker
+ 
+```bash
+docker compose up -d
+```
+ 
+### 7. Ejecutar migraciones (si aplica)
+ 
+```bash
+php artisan migrate
+```
+ 
+### 8. Iniciar proyecto
+ 
+```bash
+php artisan serve
+```
+ 
+---
+ 
+## 🛡️ Middleware personalizado
+ 
+El proyecto utiliza middleware personalizado para validar sesiones autenticadas:
+ 
+```php
+if (!session()->has('auth_token')) {
+    return redirect('/');
+}
+```
+ 
+---
+ 
+## 📁 Estructura del proyecto
+ 
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   └── Middleware/
+├── Services/
+├── Models/
+├── resources/
+│   └── views/
+├── routes/
+└── config/
+```
+ 
+---
+ 
+## 🧩 Servicios
+ 
+La lógica de negocio se encuentra desacoplada mediante **Services**:
+ 
+- `AuthService`
+- `EventService`
+- `ReservationService`
+Esto permite:
+ 
+- Controladores limpios
+- Reutilización de código
+- Mantenimiento sencillo
+- Mejor escalabilidad
+---
+ 
+## 🐳 Docker
+ 
+El proyecto utiliza Docker para:
+ 
+- Entorno consistente
+- Ejecución de servicios
+- Despliegue simplificado
+```bash
+docker compose up -d
+```
+ 
+---
+ 
+## 🔄 Flujo de autenticación
+ 
+```
+Usuario Login
+      │
+      ▼
+Laravel HTTP Client
+      │
+      ▼
+Swagger Auth API
+      │
+      ▼
+JWT Token
+      │
+      ▼
+Laravel Session
+      │
+      ▼
+Protected Routes
+```
+ 
+---
+ 
+## 🔮 Mejoras futuras
+ 
+- [ ] Integración de pagos
+- [ ] Panel administrativo
+- [ ] Roles y permisos
+- [ ] Historial de compras
+- [ ] Notificaciones
+- [ ] QR para tickets
+- [ ] Sistema de favoritos
+---
+ 
+## 👤 Autor
+ 
+Proyecto desarrollado como plataforma de gestión de eventos y tickets utilizando **Laravel** y arquitectura basada en APIs.
+ 
+---
+ 
+## 📄 Licencia
+ 
+Proyecto de uso académico y educativo.
