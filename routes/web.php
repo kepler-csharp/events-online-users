@@ -21,4 +21,5 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.submit'); /
 Route::get('/register', [AuthController::class, 'register'])->name('register'); // Show registration form
 Route::post('/register', [AuthController::class, 'createCustomer'])->name('register.submit'); // Handle registration form submission
 
-
+Route::get('/events', [WelcomeController::class, 'showEvents'])->name('events');
+Route::get('/events/{id}', [WelcomeController::class, 'showEventDetails'])->name('events.show');

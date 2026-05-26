@@ -135,22 +135,18 @@ cp .env.example .env
 php artisan key:generate
 ```
  
-### 6. Levantar contenedores Docker
- 
+### 6. Configurar .env (Necesario para Funcionar)
+ *Gateaway Endpoint:* **https://api.kepler.andrescortes.dev**
+ *Variable necesaria en .env:* **AUTH_SERVICE_URL**
 ```bash
-docker compose up -d
-```
- 
-### 7. Ejecutar migraciones (si aplica)
- 
-```bash
-php artisan migrate
+AUTH_SERVICE_URL=endpoints_url
 ```
  
 ### 8. Iniciar proyecto
  
 ```bash
 php artisan serve
+npm run dev
 ```
  
 ---
@@ -235,18 +231,7 @@ Protected Routes
  
 ---
  
-## 🔮 Mejoras futuras
- 
-- [ ] Integración de pagos
-- [ ] Panel administrativo
-- [ ] Roles y permisos
-- [ ] Historial de compras
-- [ ] Notificaciones
-- [ ] QR para tickets
-- [ ] Sistema de favoritos
----
- 
-## 👤 Autor
+## 👤 Autor: Stteen A. Rojas S
  
 Proyecto desarrollado como plataforma de gestión de eventos y tickets utilizando **Laravel** y arquitectura basada en APIs.
  
@@ -254,4 +239,4 @@ Proyecto desarrollado como plataforma de gestión de eventos y tickets utilizand
  
 ## 📄 Licencia
  
-Proyecto de uso académico y educativo.
+Proyecto de uso académico y educativo. *Derechos reservados para riwi sas*

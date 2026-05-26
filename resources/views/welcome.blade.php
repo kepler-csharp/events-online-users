@@ -197,27 +197,35 @@
 
         <div class="row g-4">
             @foreach ($events as $e)
-                <div class="col-sm-6 col-lg-3">
-                    <div class="event-card">
-                        <div class="event-thumb {{ $e['posterUrl'] }}">
-                            <span class="event-cat">{{ $e['venueCity'] }}</span>
-                            {{ $e['isActive'] }}
+            <div class="col-sm-6 col-lg-3">
+                <div class="event-card">
+                    <div class="event-image-container">
+                        <img src="{{ $e['posterUrl'] }}" alt="Evento" class="event-img">
+
+                        <span class="event-status active">
+                            Activo
+                        </span>
+                    </div>
+                    <div class="event-body">
+                        <div class="event-name">{{ $e['name'] }}</div>
+                        <div class="event-meta">
+                            <i class="bi bi-calendar3"></i>{{ $e['createdAt'] }}<br>
+                            <i class="bi bi-geo-alt-fill"></i>{{ $e['venueName'] }}
                         </div>
-                        <div class="event-body">
-                            <div class="event-name">{{ $e['name'] }}</div>
-                            <div class="event-meta">
-                                <i class="bi bi-calendar3"></i>{{ $e['createdAt'] }}<br>
-                                <i class="bi bi-geo-alt-fill"></i>{{ $e['venueName'] }}
-                            </div>
-                            <div class="event-prices">
-              {{--                   <span class="price-pill pill-general">General {{ $e['general'] }}</span>
-                                <span class="price-pill pill-vip"><i class="bi bi-star-fill me-1"></i>VIP
-                                    {{ $e['vip'] }}</span> --}}
-                            </div>
-                            <a href="#tickets" class="btn-buy">Comprar entrada &rarr;</a>
+                        <div class="event-prices">
+                            <span class="price-pill pill-general">General {{-- {{ $e['general'] }} --}}</span>
+                            <span class="price-pill pill-vip"><i class="bi bi-star-fill me-1"></i>VIP
+                                {{-- {{ $e['vip'] }} --}}</span> 
                         </div>
+                        <a href="#" 
+                            class="btn-buy"
+                            data-bs-toggle="modal"
+                            data-bs-target="#eventModal{{ $e['id'] }}">
+                            Ver evento →
+                        </a>
                     </div>
                 </div>
+            </div>
             @endforeach
         </div>
     </div>
@@ -432,6 +440,113 @@
         </div>
     </div>
 </footer>
+
+@foreach ($events as $e)
+
+<div class="modal fade" id="eventModal{{ $e['id'] }}" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content event-modal">
+
+            <div class="modal-body p-0">
+
+                <div class="event-modal-banner">
+                    <img src="{{ $e['posterUrl'] }}" class="w-100">
+
+                    <span class="event-status active">
+                        {{ $e['isActive'] ? 'Activo' : 'Inactivo' }}
+                    </span>
+                </div>
+
+                <div class="p-4">
+
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+                        <div>
+                            <h2 class="event-modal-title">
+                                {{ $e['name'] }}
+                            </h2>
+
+                            <div class="event-modal-meta">
+                                <div>
+                                    <i class="bi bi-calendar-event"></i>
+                                    {{ $e['createdAt'] }}
+                                </div>
+
+                                <div>
+                                    <i class="bi bi-geo-alt"></i>
+                                    {{ $e['venueName'] }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-end">
+                            <div class="event-price-label">
+                                Desde
+                            </div>
+
+                            <div class="event-price">
+                                $80K
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <p class="event-description">
+                        Vive una experiencia inolvidable con uno de los mejores eventos del año.
+                        Disfruta música, entretenimiento y una producción de primer nivel.
+                    </p>
+
+                    <div class="row g-3 mt-3">
+
+                        <div class="col-md-6">
+                            <div class="ticket-option">
+                                <h5>General</h5>
+                                <p>Acceso estándar al evento.</p>
+
+                                <div class="ticket-price-small">
+                                    $80.000
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="ticket-option vip">
+                                <h5>VIP</h5>
+                                <p>Zona preferencial + beneficios exclusivos.</p>
+
+                                <div class="ticket-price-small">
+                                    $200.000
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-4 gap-3">
+
+                        <button class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Cerrar
+                        </button>
+
+                        <a href="{{ route('events.show', $e['id']) }}"
+                           class="btn btn-buy px-4">
+                            Comprar entrada
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@endforeach
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
