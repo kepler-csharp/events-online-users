@@ -46,11 +46,11 @@
                 @if (Route::has('login'))
                     @if (session('user') && session('auth_token'))
                         <!-- <a href="{ url('/dashboard') }" class="btn-nav">Mi cuenta</a> -->
-                        <a href="{{ route('dashboard') }}" class="text-white mt-2">Perfil de
+                        <a href="{{ route('dashboard') }}" class="text-white mt-2">Ver
                             <strong>{{ session('user.name') }}</strong></a>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn-logout"><i class="bi bi-power"></i></button>
+                            <button type="submit" class="btn btn-outline-danger rounded-circle shadow-lg"><i class="bi bi-power"></i></button>
                         </form>
                     @else
                         <a href="{{ route('login') }}" class="btn-ghost text-decoration-none"
@@ -203,7 +203,7 @@
                         <img src="{{ $e['posterUrl'] }}" alt="Evento" class="event-img">
 
                         <span class="event-status active">
-                            Activo
+                            {{ $e['isActive']? 'Activo' : 'Inactivo' }}
                         </span>
                     </div>
                     <div class="event-body">
@@ -450,7 +450,7 @@
             <div class="modal-body p-0">
 
                 <div class="event-modal-banner">
-                    <img src="{{ $e['posterUrl'] }}" class="w-100">
+                    <img src="{{ $e['posterUrl'] }}" class="img w-100" alt="Evento">
 
                     <span class="event-status active">
                         {{ $e['isActive'] ? 'Activo' : 'Inactivo' }}

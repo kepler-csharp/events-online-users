@@ -14,6 +14,8 @@ Route::middleware('session.auth')->group(function () {
     })->name('dashboard');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/events/{id}', [WelcomeController::class, 'showEventDetails'])->name('events.show');
+    Route::post('/reserve/{idShowTime}', [WelcomeController::class, 'reserveSeats'])->name('event.reservation');
 });
 
 Route::get('/login', [AuthController::class, 'index'])->name('login'); // Show login form
@@ -22,4 +24,3 @@ Route::get('/register', [AuthController::class, 'register'])->name('register'); 
 Route::post('/register', [AuthController::class, 'createCustomer'])->name('register.submit'); // Handle registration form submission
 
 Route::get('/events', [WelcomeController::class, 'showEvents'])->name('events');
-Route::get('/events/{id}', [WelcomeController::class, 'showEventDetails'])->name('events.show');

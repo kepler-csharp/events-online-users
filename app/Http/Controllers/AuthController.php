@@ -106,7 +106,7 @@ class AuthController extends Controller
         switch($response->status()){
             case 200:
                     // Logout successful
-                    return back()->withErrors(['success' => 'Session cerrada exitosamente.']);
+                    return redirect()->route('welcome')->withErrors(['success' => 'Session cerrada exitosamente.']);
                 break;
             case 401:
                 // Unauthorized, token might be invalid or expired
