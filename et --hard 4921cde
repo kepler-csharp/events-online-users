@@ -1,0 +1,22 @@
+[33m0a23986[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: checkout: moving from develop to main
+[33m8444831[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m HEAD@{1}: checkout: moving from main to develop
+[33m0a23986[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{2}: reset: moving to HEAD
+[33m0a23986[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{3}: commit (merge): fix: resolve conflict version from local and remote repository
+[33m8444831[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m HEAD@{4}: merge develop: Fast-forward
+[33m4921cde[m HEAD@{5}: checkout: moving from develop to main
+[33m8444831[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m HEAD@{6}: commit: add: dockerfile & docker-compose.yml
+[33m4921cde[m HEAD@{7}: checkout: moving from develop to develop
+[33m4921cde[m HEAD@{8}: checkout: moving from main to develop
+[33m4921cde[m HEAD@{9}: reset: moving to main
+[33m4921cde[m HEAD@{10}: merge develop: Fast-forward
+[33m136d255[m[33m ([m[1;31morigin/feature/user-app[m[33m, [m[1;32mfeature/user-app[m[33m)[m HEAD@{11}: checkout: moving from develop to main
+[33m4921cde[m HEAD@{12}: commit: update: Proyect working in 90% add payment process and flow design
+[33m136d255[m[33m ([m[1;31morigin/feature/user-app[m[33m, [m[1;32mfeature/user-app[m[33m)[m HEAD@{13}: checkout: moving from main to develop
+[33m136d255[m[33m ([m[1;31morigin/feature/user-app[m[33m, [m[1;32mfeature/user-app[m[33m)[m HEAD@{14}: merge develop: Fast-forward
+[33m9ac679c[m HEAD@{15}: checkout: moving from develop to main
+[33m136d255[m[33m ([m[1;31morigin/feature/user-app[m[33m, [m[1;32mfeature/user-app[m[33m)[m HEAD@{16}: checkout: moving from feature/user-app to develop
+[33m136d255[m[33m ([m[1;31morigin/feature/user-app[m[33m, [m[1;32mfeature/user-app[m[33m)[m HEAD@{17}: commit: add: view to show event and make logic to make reservation with seats
+[33mef2406a[m HEAD@{18}: commit: add: modal to view event also add route to see event
+[33m08551d1[m HEAD@{19}: commit: add: events data in landing and created services to auth and update readme
+[33m9ac679c[m HEAD@{20}: checkout: moving from main to feature/user-app
+[33m9ac679c[m HEAD@{21}: commit (initial): add: first push proyect only landing page
