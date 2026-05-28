@@ -77,8 +77,8 @@ class AuthController extends Controller
                         'role' => 'customer',
                     ]
                 ]);
-                
-                return back()->withErrors(['success' => 'Customer created successfully. Please login to continue.']);
+                return redirect()->intended('login')
+                    ->with(['success' => 'Customer created successfully. Please login to continue.']);
                 break;
             case 400:
                 //Somenthing went wrong

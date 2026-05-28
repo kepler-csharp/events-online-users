@@ -17,28 +17,27 @@
     <div class="circle-top"></div>
     <div class="circle-bottom"></div>
 
-    @if ($errors->has('error'))
-        <div class="login-alert">
-
-            <div class="login-alert-icon">
-                <i class="bi bi-exclamation-triangle-fill"></i>
-            </div>
-
-            <div class="login-alert-content">
-                <span>Error de autenticación</span>
-                <p>{{ $errors->first('error') }}</p>
-            </div>
-
-            <button type="button" class="login-alert-close" onclick="this.parentElement.remove()">
-
-                <i class="bi bi-x"></i>
-            </button>
-
-        </div>
-    @endif
     <!-- REGISTER -->
     <div class="login-card">
+        @if ($errors->has('error'))
+            <div class="login-alert">
 
+                <div class="login-alert-icon">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+
+                <div class="login-alert-content">
+                    <span>Error de autenticación</span>
+                    <p>{{ $errors->first('error') }}</p>
+                </div>
+
+                <button type="button" class="login-alert-close" onclick="this.parentElement.remove()">
+
+                    <i class="bi bi-x"></i>
+                </button>
+
+            </div>
+        @endif
         <div class="logo">
             <i class="bi bi-ticket-perforated-fill"></i>
             Ticket<span>Now</span>
@@ -53,7 +52,7 @@
             y disfrutar de experiencias inolvidables.
         </p>
 
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" action="{{ route('register.submit') }}">
 
             @csrf
 

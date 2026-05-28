@@ -6,6 +6,7 @@
     <title>Mi Panel — {{ config('app.name', 'TicketNow') }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     @vite('resources/css/dashboard.css')
 </head>
 <body>
@@ -55,7 +56,31 @@
 
     {{-- ─── MAIN ─── --}}
     <main class="main">
+        @if (session('success'))
+            <div class="alert alert-success" id="alert-success">
+                <div class="alert-icon"><i class="bi bi-check-circle-fill"></i></div>
+                <div class="alert-body">
+                    <div class="alert-title">¡Operación exitosa!</div>
+                    <div class="alert-msg">{{ session('success') }}</div>
+                </div>
+                <button class="alert-close" onclick="closeAlert('alert-success')">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+        @endif
 
+        @if (session('error'))
+            <div class="alert alert-error" id="alert-error">
+                <div class="alert-icon"><i class="bi bi-x-circle-fill"></i></div>
+                <div class="alert-body">
+                    <div class="alert-title">¡Ocurrió un error!</div>
+                    <div class="alert-msg">{{ session('error') }}</div>
+                </div>
+                <button class="alert-close" onclick="closeAlert('alert-error')">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+        @endif
         {{-- TOPBAR --}}
         <div class="topbar">
             <div class="topbar-left">

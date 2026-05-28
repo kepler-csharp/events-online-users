@@ -15,7 +15,10 @@ Route::middleware('session.auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/events/{id}', [WelcomeController::class, 'showEventDetails'])->name('events.show');
-    Route::post('/reserve/{idShowTime}', [WelcomeController::class, 'reserveSeats'])->name('event.reservation');
+    Route::post('/reserve/{idShowTime}', [WelcomeController::class, 'paymentSeats'])->name('event.reservation');
+    // Route for payment page
+    Route::get('/payment/{idShowTime}/{seats}', [WelcomeController::class, 'showPaymentPage'])->name('payment.event');
+    Route::post('/payment/process/{idShowTime}', [WelcomeController::class, 'processOrder'])->name('payment.process');
 });
 
 Route::get('/login', [AuthController::class, 'index'])->name('login'); // Show login form
