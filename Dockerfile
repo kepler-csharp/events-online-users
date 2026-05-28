@@ -1,30 +1,70 @@
+# =========================
+# Laravel 13 Dockerfile
+# =========================
+
 FROM php:8.3-fpm
 
-# Dependencias
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     git \
     curl \
-    zip \
     unzip \
+    zip \
     libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
     libonig-dev \
     libxml2-dev \
-    libzip-dev
+    libzip-dev \
+    libicu-dev \
+    nano \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Extensiones PHP
-RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
+# Configurar extensión GD
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
-# Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Instalar extensiones PHP necesarias para Laravel
+RUN docker-php-ext-install \
+    pdo \
+    pdo_mysql \
+    mbstring \
+    zip \
+    exif \
+    pcntl \
+    bcmath \
+    intl \
+    gd
 
+# Instalar Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Directorio principal
 WORKDIR /var/www
 
+# Copiar archivos composer primero
+COPY composer.json composer.lock ./
+
+# Instalar dependencias Laravel
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction
+
+# Copiar el resto del proyecto
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+# Permisos Laravel
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 storage bootstrap/cache
 
-RUN chown -R www-data:www-data /var/www
+# Optimización Laravel
+RUN php artisan config:cache || true
+RUN php artisan route:cache || true
+RUN php artisan view:cache || true
 
+# Puerto PHP-FPM
 EXPOSE 9000
 
+# Iniciar PHP-FPM
 CMD ["php-fpm"]
