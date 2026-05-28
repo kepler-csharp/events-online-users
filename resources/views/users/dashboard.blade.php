@@ -6,7 +6,6 @@
     <title>Mi Panel — {{ config('app.name', 'TicketNow') }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     @vite('resources/css/dashboard.css')
 </head>
 <body>
@@ -81,6 +80,7 @@
                 </button>
             </div>
         @endif
+
         {{-- TOPBAR --}}
         <div class="topbar">
             <div class="topbar-left">
@@ -112,7 +112,7 @@
 
         {{-- STATS --}}
         @php
-            $totalEntradas = isset($tickets) ? count($tickets) : 0;
+            $totalEntradas = count($data);
             $totalVip      = isset($tickets) ? collect($tickets)->where('type', 'VIP')->count() : 0;
             $proximoEvento = isset($tickets) && count($tickets) > 0 ? $tickets[0]['event_date'] ?? '—' : '—';
         @endphp
@@ -150,99 +150,95 @@
                 </a>
             </div>
 
-            @if(isset($tickets) && count($tickets) > 0)
-                <div class="events-grid">
-                    @foreach($tickets as $i => $ticket)
-                    <div class="event-card" style="animation-delay:{{ $i * 0.08 }}s">
-                        <div class="event-thumb thumb-{{ $ticket['thumb'] ?? 'concert' }}">
-                            <span class="event-cat-badge">{{ $ticket['category'] ?? 'Evento' }}</span>
-                            {{ $ticket['emoji'] ?? '🎵' }}
-                            <span class="ticket-type-badge {{ $ticket['type'] === 'VIP' ? 'badge-vip' : 'badge-general' }}">
-                                @if($ticket['type'] === 'VIP') <i class="bi bi-star-fill me-1"></i> @endif
-                                {{ $ticket['type'] }}
-                            </span>
-                        </div>
-                        <div class="event-body">
-                            <div class="event-name">{{ $ticket['event_name'] }}</div>
-                            <div class="event-meta">
-                                <div><i class="bi bi-calendar3"></i>{{ $ticket['event_date'] }}</div>
-                                <div><i class="bi bi-geo-alt-fill"></i>{{ $ticket['place'] }}</div>
-                                <div><i class="bi bi-hash"></i>{{ $ticket['ticket_code'] ?? 'TKN-' . strtoupper(substr(md5($ticket['event_name']), 0, 8)) }}</div>
-                            </div>
-                            <div class="event-footer">
-                                <div class="event-price">{{ $ticket['price'] }}</div>
-                                <button
-                                    class="btn-ver-entrada"
-                                    onclick="openModal(
-                                        '{{ $ticket['event_name'] }}',
-                                        '{{ $ticket['event_date'] }}',
-                                        '{{ $ticket['place'] }}',
-                                        '{{ $ticket['type'] }}',
-                                        '{{ $ticket['price'] }}',
-                                        '{{ $ticket['ticket_code'] ?? 'TKN-' . strtoupper(substr(md5($ticket['event_name']), 0, 8)) }}',
-                                        '{{ $ticket['emoji'] ?? '🎵' }}'
-                                    )">
-                                    <i class="bi bi-qr-code"></i> Ver entrada
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+@if(isset($data) && count($data) > 0)
+<div class="events-grid">
+    @foreach($data as $i => $order)
+        @php
+            $firstItem = $order['items'][0] ?? null;
+            $totalTickets = count($order['items']);
+        @endphp
+        <div class="event-card" style="animation-delay:{{ $i * 0.08 }}s">
+            <div class="event-thumb thumb-theater">
+                <span class="event-cat-badge">Cine</span>
+                🎬
+                <span class="ticket-type-badge {{ $order['status'] == 1 ? 'badge-vip' : 'badge-general' }}">
+                    {{ $totalTickets }} {{ $totalTickets > 1 ? 'Entradas' : 'Entrada' }}
+                </span>
+            </div>
+
+            <div class="event-body">
+                <div class="event-name">{{ $firstItem['eventName'] }}</div>
+                
+                <div class="event-meta" style="margin-bottom: 0.5rem;">
+                    <div><i class="bi bi-calendar3"></i> {{ \Carbon\Carbon::parse($firstItem['showtimeStart'])->format('d M, Y - h:i A') }}</div>
+                    <div><i class="bi bi-hash"></i> Orden #{{ $order['id'] }} • <strong>{{ $order['status'] == 1 ? 'Pagado' : 'Pendiente' }}</strong></div>
+                </div>
+
+                {{-- Mini badge de asientos dentro de la card --}}
+                <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0.6rem 0; border-top: 1px solid var(--border); margin-bottom: 0.5rem;">
+                    @foreach($order['items'] as $ticket)
+                        <button style="background: var(--surface2); border: 1px solid var(--border); color: var(--gray); font-size: 0.72rem; padding: 0.2rem 0.4rem; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 0.2rem;"
+                                onclick="openQrModal('{{ $ticket['eventName'] }}', '{{ $ticket['seatLabel'] }}', '{{ \Carbon\Carbon::parse($ticket['showtimeStart'])->format('d M, Y - h:i A') }}', '{{ $ticket['qrImageUrl'] }}', '{{ $ticket['qrCode'] }}')">
+                            💺 {{ $ticket['seatLabel'] }}
+                        </button>
                     @endforeach
                 </div>
 
-            @else
-                {{-- ESTADO VACÍO --}}
-                <div class="empty-state">
-                    <i class="bi bi-ticket-perforated"></i>
-                    <h4>Aún no tienes entradas</h4>
-                    <p>Explora nuestra cartelera y vive experiencias increíbles. Tu primera entrada te está esperando.</p>
-                    <a href="{{ url('/') }}#events" class="btn-explorar">
-                        <i class="bi bi-search"></i> Explorar eventos
-                    </a>
+                <div class="event-footer" style="padding-top: 0.5rem;">
+                    <div class="event-price">${{ number_format($order['total'], 0, ',', '.') }}</div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted)">Total pagado</span>
                 </div>
-            @endif
+            </div>
+        </div>
+    @endforeach
+</div>
+@endif
         </div>
 
     </main>
 
-    {{-- ─── MODAL QR ─── --}}
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    {{-- ─── MODAL QR (IDs Unificados con JavaScript) ─── --}}
+    <div class="modal-overlay" id="qrModal">
         <div class="modal-box">
-            <button class="modal-close" onclick="closeModal()"><i class="bi bi-x"></i></button>
-            <div class="modal-event-name" id="modalName"></div>
-            <div class="modal-event-meta" id="modalMeta"></div>
-            <div class="qr-box" id="modalEmoji"></div>
-            <div id="modalBadge" class="modal-ticket-type"></div>
-            <div class="modal-info" id="modalInfo"></div>
+            <button class="modal-close" onclick="closeQrModal()"><i class="bi bi-x"></i></button>
+            <div class="modal-event-name" id="modalEventName"></div>
+            <div class="modal-event-meta" id="modalEventMeta"></div>
+            
+            {{-- Caja blanca que recibe la imagen del código QR que viene de tu API --}}
+            <div class="qr-box" style="background: #fff; border-radius: 12px; width: 180px; height: 180px; margin: 0 auto 1.25rem; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <img id="modalQrImg" src="" alt="Código QR" style="width: 100%; height: 100%; object-fit: contain; padding: 10px;">
+            </div>
+            
+            <div id="modalSeat" class="modal-ticket-type badge-vip"></div>
+            <p class="modal-info" id="modalQrCode" style="font-family: monospace; font-size: 0.65rem; word-break: break-all; margin-top: 10px; color: #6c757d;"></p>
         </div>
     </div>
 
     <script>
-        function openModal(name, date, place, type, price, code, emoji) {
-            document.getElementById('modalName').textContent  = name;
-            document.getElementById('modalMeta').textContent  = date + ' · ' + place;
-            document.getElementById('modalEmoji').textContent = emoji;
-
-            const badge = document.getElementById('modalBadge');
-            if (type === 'VIP') {
-                badge.textContent = '⭐ VIP';
-                badge.style.cssText = 'background:rgba(237,191,155,.15);color:#EDBF9B;border:1px solid rgba(237,191,155,.3)';
-            } else {
-                badge.textContent = 'General';
-                badge.style.cssText = 'background:rgba(221,220,219,.1);color:#DDDCDB;border:1px solid rgba(221,220,219,.15)';
-            }
-
-            document.getElementById('modalInfo').innerHTML =
-                '<strong style="color:#DDDCDB">Código:</strong> ' + code +
-                '<br><strong style="color:#DDDCDB">Precio:</strong> ' + price +
-                '<br><br><span style="color:#6c757d;font-size:.72rem">Presenta este QR en la entrada del evento.</span>';
-
-            document.getElementById('modalOverlay').classList.add('open');
+        function openQrModal(eventName, seatLabel, showtime, qrImageUrl, qrCode) {
+            // Mapeamos los datos correctos en el HTML del modal
+            document.getElementById('modalEventName').innerText = eventName;
+            document.getElementById('modalEventMeta').innerText = showtime;
+            document.getElementById('modalSeat').innerText = 'Asiento: ' + seatLabel;
+            document.getElementById('modalQrCode').innerText = qrCode;
+            
+            // Inyectamos la URL de la imagen de tu API
+            document.getElementById('modalQrImg').src = qrImageUrl;
+            
+            // Abrimos el modal
+            document.getElementById('qrModal').classList.add('open');
         }
 
-        function closeModal(e) {
-            if (!e || e.target === document.getElementById('modalOverlay') || e.currentTarget.classList.contains('modal-close')) {
-                document.getElementById('modalOverlay').classList.remove('open');
+        function closeQrModal() {
+            document.getElementById('qrModal').classList.remove('open');
+            document.getElementById('modalQrImg').src = ""; // Limpiamos la imagen por seguridad
+        }
+
+        // Cerrar si hacen clic fuera de la caja blanca del modal
+        window.onclick = function(event) {
+            const modal = document.getElementById('qrModal');
+            if (event.target === modal) {
+                closeQrModal();
             }
         }
     </script>

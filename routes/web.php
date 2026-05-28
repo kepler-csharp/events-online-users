@@ -9,9 +9,7 @@ Route::get('/', [WelcomeController::class, 'showEvents'])->name('welcome');
 
 // Routes for authentication
 Route::middleware('session.auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('users.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [WelcomeController::class, 'dashboardPage'])->name('dashboard');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/events/{id}', [WelcomeController::class, 'showEventDetails'])->name('events.show');

@@ -182,5 +182,25 @@ class WelcomeController extends Controller
         }
     }
 
+    public function dashboardPage(){
+        try{
+            $response = Http::withToken(session('auth_token'))
+                ->get(config('services.auth_service.url').'/api/orders/');
+        }catch(\Exception $e){
+           return view('users.dashboard')->with('error', 'Error de conexión: ' . $e->getMessage());
+        }
+
+        // 3. Usar successful() es más seguro ya que cubre códigos 200, 201, etc.
+        if ($response->successful()) {
+            $data = $response->json()['data']['items'] ?? []; // Evita errores si 'data' no viene en la respuesta
+           /*  dd($data); */
+            return view('users.dashboard', compact('data'));
+        
+        } else {
+            // Si el estado no es exitoso (ej. token expirado o 401), pasamos el error a la vista
+            $data = [];
+            return view('users.dashboard', compact('data'))->with('error', 'No se pudieron cargar las órdenes.');
+        }
+    }
 
 }
