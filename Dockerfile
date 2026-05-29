@@ -64,7 +64,7 @@ RUN php artisan route:cache || true
 RUN php artisan view:cache || true
 
 # Puerto PHP-FPM
-EXPOSE 9000
+EXPOSE 80
 
 # Iniciar PHP-FPM
 CMD ["php-fpm"]
