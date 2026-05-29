@@ -65,7 +65,6 @@ jobs:
               --name events-online-users \
               -p 9090:9000 \
               --restart always \
-              -e APP_KEY="${{ production.APP_KEY }}" \
               "$IMAGE"
               
             # Health check básico
