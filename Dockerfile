@@ -1,20 +1,21 @@
 FROM php:8.3-fpm
 
-# Dependencias del sistema
+# Instalar dependencias del sistema y extensiones de PHP
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    curl \
-    vim \
     libzip-dev \
     libpng-dev \
     libonig-dev \
     libcurl4-openssl-dev \
     libpq-dev \
+    gnupg \
+    curl \
+    lsb-release \
+    apt-transport-https \
     unixodbc \
     unixodbc-dev \
-    nodejs \
-    npm \
+    vim nodejs npm \
     && docker-php-ext-install \
         zip \
         pdo \
@@ -24,51 +25,28 @@ RUN apt-get update && apt-get install -y \
         exif \
         gd \
         bcmath \
-    && apt-get clean
+    && apt-get clean \
+    && sed -i "s|listen = 127.0.0.1:9000|listen = 0.0.0.0:9000|g" /usr/local/etc/php-fpm.d/www.conf
 
-# PHP-FPM escuchar externamente
-RUN sed -i "s|listen = 127.0.0.1:9000|listen = 0.0.0.0:9000|g" \
-    /usr/local/etc/php-fpm.d/www.conf
-
-# Composer
+# Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Configurar el directorio de trabajo
 WORKDIR /var/www/html
 
-# Copiar composer primero para cache
-COPY composer.json composer.lock ./
 
-# Instalar dependencias PHP
-RUN composer install \
-    --no-dev \
-    --optimize-autoloader \
-    --no-interaction \
-    --no-progress
-
-# Copiar package files
-COPY package*.json ./
-
-# Instalar dependencias node
-RUN npm install
-
-# Copiar el resto del proyecto
 COPY . .
 
-# Build de Vite
-RUN npm run build
+#RUN cp .env.example .env
 
-# IMPORTANTE:
-# eliminar modo dev de vite
-RUN rm -f public/hot
+# Copiar solo composer.json y composer.lock primero (para usar caché)
+COPY composer.json composer.lock ./
 
-# Permisos
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 storage bootstrap/cache
+# Instalar dependencias de Composer
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
-# Optimizar Laravel
-RUN php artisan config:clear || true
-RUN php artisan cache:clear || true
-RUN php artisan view:clear || true
+
+RUN chown -R www-data:www-data /var/www/html && chmod -R 775 /var/www/html
 
 EXPOSE 9000
 
