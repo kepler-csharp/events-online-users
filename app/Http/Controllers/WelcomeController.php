@@ -145,7 +145,7 @@ class WelcomeController extends Controller
     {
         $seats = $request->input('seats');
         $seatIds = array_map('intval', explode(',', $seats)); // [60, 59]
-
+        
         try{
             $response = Http::withToken(session('auth_token'))
                 ->post(config('services.auth_service.url') . '/api/orders', [
@@ -155,6 +155,8 @@ class WelcomeController extends Controller
             return redirect()->back()->with('error', 'Upss... Hubo un error al intentarlo');
         }
         
+        dd($response->status(), $response->json(), $response->body());
+
         if($response->successful()){
             $data = $response->json()['data'];
             return $this->processPay($data['id'], 'Completed');

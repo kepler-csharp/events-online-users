@@ -1,21 +1,20 @@
 FROM php:8.3-fpm
 
-# Instalar dependencias del sistema y extensiones de PHP
+# Dependencias del sistema
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
+    curl \
+    vim \
     libzip-dev \
     libpng-dev \
     libonig-dev \
     libcurl4-openssl-dev \
     libpq-dev \
-    gnupg \
-    curl \
-    lsb-release \
-    apt-transport-https \
     unixodbc \
     unixodbc-dev \
-    vim nodejs npm \
+    nodejs \
+    npm \
     && docker-php-ext-install \
         zip \
         pdo \
@@ -25,28 +24,51 @@ RUN apt-get update && apt-get install -y \
         exif \
         gd \
         bcmath \
-    && apt-get clean \
-    && sed -i "s|listen = 127.0.0.1:9000|listen = 0.0.0.0:9000|g" /usr/local/etc/php-fpm.d/www.conf
+    && apt-get clean
 
-# Instalar Composer
+# PHP-FPM escuchar externamente
+RUN sed -i "s|listen = 127.0.0.1:9000|listen = 0.0.0.0:9000|g" \
+    /usr/local/etc/php-fpm.d/www.conf
+
+# Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configurar el directorio de trabajo
 WORKDIR /var/www/html
 
-
-COPY . .
-
-# RUN cp .env.example .env
-
-# Copiar solo composer.json y composer.lock primero (para usar caché)
+# Copiar composer primero para cache
 COPY composer.json composer.lock ./
 
-# Instalar dependencias de Composer
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+# Instalar dependencias PHP
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --no-progress
 
+# Copiar package files
+COPY package*.json ./
 
-RUN chown -R www-data:www-data /var/www/html && chmod -R 775 /var/www/html
+# Instalar dependencias node
+RUN npm install
+
+# Copiar el resto del proyecto
+COPY . .
+
+# Build de Vite
+RUN npm run build
+
+# IMPORTANTE:
+# eliminar modo dev de vite
+RUN rm -f public/hot
+
+# Permisos
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 storage bootstrap/cache
+
+# Optimizar Laravel
+RUN php artisan config:clear || true
+RUN php artisan cache:clear || true
+RUN php artisan view:clear || true
 
 EXPOSE 9000
 
