@@ -1,4 +1,3 @@
-```dockerfile
 FROM php:8.3-fpm
 
 # Instalar dependencias del sistema
@@ -55,4 +54,3 @@ EXPOSE 80
 
 # Iniciar PHP-FPM
 CMD ["php-fpm"]
-```
