@@ -37,7 +37,7 @@ WORKDIR /var/www/html
 
 COPY . .
 
-#RUN cp .env.example .env
+RUN cp .env.example .env
 
 # Copiar solo composer.json y composer.lock primero (para usar caché)
 COPY composer.json composer.lock ./
