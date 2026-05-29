@@ -1,6 +1,25 @@
+# ==========================================
+# STAGE 1: FRONTEND (VITE)
+# ==========================================
+FROM node:20 AS frontend
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+
+# ==========================================
+# STAGE 2: PHP / LARAVEL
+# ==========================================
 FROM php:8.3-fpm
 
-# Instalar dependencias del sistema y extensiones de PHP
+# Dependencias del sistema
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -9,13 +28,9 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libcurl4-openssl-dev \
     libpq-dev \
-    gnupg \
-    curl \
-    lsb-release \
-    apt-transport-https \
     unixodbc \
     unixodbc-dev \
-    vim nodejs npm \
+    vim \
     && docker-php-ext-install \
         zip \
         pdo \
@@ -25,28 +40,35 @@ RUN apt-get update && apt-get install -y \
         exif \
         gd \
         bcmath \
-    && apt-get clean \
-    && sed -i "s|listen = 127.0.0.1:9000|listen = 0.0.0.0:9000|g" /usr/local/etc/php-fpm.d/www.conf
+    && apt-get clean
 
-# Instalar Composer
+# Configurar PHP-FPM
+RUN sed -i "s|listen = 127.0.0.1:9000|listen = 0.0.0.0:9000|g" \
+    /usr/local/etc/php-fpm.d/www.conf
+
+# Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configurar el directorio de trabajo
 WORKDIR /var/www/html
 
-
-COPY . .
-
-# RUN cp .env.example .env
-
-# Copiar solo composer.json y composer.lock primero (para usar caché)
+# Copiar composer primero para cache
 COPY composer.json composer.lock ./
 
-# Instalar dependencias de Composer
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --no-progress
 
+# Copiar proyecto
+COPY . .
 
-RUN chown -R www-data:www-data /var/www/html && chmod -R 775 /var/www/html
+# Copiar build de Vite desde Node
+COPY --from=frontend /app/public/build ./public/build
+
+# Permisos
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 9000
 
