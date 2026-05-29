@@ -8,8 +8,8 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3"></script>
-    <link href="{{  asset('css/welcome.css') }}" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/gh/kepler-csharp/events-online-users@main/public/css/welcome.css" rel="stylesheet">
 
 </head>
 
@@ -404,6 +404,7 @@
 @endforeach
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3"></script>
 </body>
 
 </html>
