@@ -1,25 +1,6 @@
-# ==========================================
-# STAGE 1: FRONTEND (VITE)
-# ==========================================
-FROM node:20 AS frontend
-
-WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm install
-
-COPY . .
-
-RUN npm run build
-
-
-# ==========================================
-# STAGE 2: PHP / LARAVEL
-# ==========================================
 FROM php:8.3-fpm
 
-# Dependencias del sistema
+# Instalar dependencias del sistema y extensiones de PHP
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -28,9 +9,13 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libcurl4-openssl-dev \
     libpq-dev \
+    gnupg \
+    curl \
+    lsb-release \
+    apt-transport-https \
     unixodbc \
     unixodbc-dev \
-    vim \
+    vim nodejs npm \
     && docker-php-ext-install \
         zip \
         pdo \
@@ -40,35 +25,28 @@ RUN apt-get update && apt-get install -y \
         exif \
         gd \
         bcmath \
-    && apt-get clean
+    && apt-get clean \
+    && sed -i "s|listen = 127.0.0.1:9000|listen = 0.0.0.0:9000|g" /usr/local/etc/php-fpm.d/www.conf
 
-# Configurar PHP-FPM
-RUN sed -i "s|listen = 127.0.0.1:9000|listen = 0.0.0.0:9000|g" \
-    /usr/local/etc/php-fpm.d/www.conf
-
-# Composer
+# Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Configurar el directorio de trabajo
 WORKDIR /var/www/html
 
-# Copiar composer primero para cache
-COPY composer.json composer.lock ./
 
-RUN composer install \
-    --no-dev \
-    --optimize-autoloader \
-    --no-interaction \
-    --no-progress
-
-# Copiar proyecto
 COPY . .
 
-# Copiar build de Vite desde Node
-COPY --from=frontend /app/public/build ./public/build
+# RUN cp .env.example .env
 
-# Permisos
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 storage bootstrap/cache
+# Copiar solo composer.json y composer.lock primero (para usar caché)
+COPY composer.json composer.lock ./
+
+# Instalar dependencias de Composer
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+
+RUN chown -R www-data:www-data /var/www/html && chmod -R 775 /var/www/html
 
 EXPOSE 9000
 

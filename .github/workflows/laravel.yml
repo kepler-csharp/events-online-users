@@ -65,9 +65,9 @@ jobs:
               --name events-online-users \
               -p 9090:9000 \
               --restart always \
-              -e APP_KEY="${{ secrets.APP_KEY }}" \
+              -e APP_KEY="${{ production.APP_KEY }}" \
               "$IMAGE"
               
             # Health check básico
             sleep 5
-            docker ps | grep ticketevents_container || (echo "Container failed to start" && exit 1)
+            docker ps | grep events-online-users|| (echo "Container failed to start" && exit 1)
