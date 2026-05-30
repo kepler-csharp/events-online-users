@@ -44,7 +44,7 @@ COPY composer.json composer.lock ./
 
 # Instalar dependencias de Composer
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-
+RUN php artisan key:generate
 
 RUN chown -R www-data:www-data /var/www/html && chmod -R 775 /var/www/html
 
