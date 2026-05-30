@@ -48,7 +48,7 @@ class WelcomeController extends Controller
             $event = $event->json()['data'];
             $showtime = $showtime->json()['data'];
             $seats = $seats->json()['data'];
-
+            
             return view('events.show', compact('event', 'showtime', 'seats'));
 
         }else{
@@ -155,7 +155,7 @@ class WelcomeController extends Controller
             return redirect()->back()->with('error', 'Upss... Hubo un error al intentarlo');
         }
         
-        dd($response->status(), $response->json(), $response->body());
+        /* dd($response->status(), $response->json(), $response->body()); */
 
         if($response->successful()){
             $data = $response->json()['data'];
