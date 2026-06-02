@@ -56,17 +56,27 @@ jobs:
             echo "${{ secrets.TOKEN }}" | docker login ghcr.io -u github-actions --password-stdin
 
             IMAGE="ghcr.io/${{ github.repository }}:latest"
-            
+
             docker pull "$IMAGE"
+
             docker stop events-online-users || true
             docker rm events-online-users || true
-            
+
             docker run -d \
               --name events-online-users \
               -p 9090:9000 \
               --restart always \
               "$IMAGE"
-              
-            # Health check básico
-            sleep 5
-            docker ps | grep events-online-users|| (echo "Container failed to start" && exit 1)
+
+            sleep 10
+
+            docker ps | grep events-online-users || (echo "Container failed to start" && exit 1)
+
+            # Crear carpeta para Nginx
+            mkdir -p /var/www/html/public
+
+            # Copiar assets compilados al host
+            docker cp events-online-users:/var/www/html/public/build /var/www/html/public/
+
+            # Verificar
+            ls -lah /var/www/html/public/build/assets
