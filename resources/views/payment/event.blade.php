@@ -163,13 +163,13 @@
                 </div>
 
                 <div class="summary-item">
-                    <span>Puestos</span>
+                    <span>Puesto</span>
                     <span>{{ implode(', ', $seats) }}</span>
                 </div>
 
                 <div class="summary-item">
                     <span>Servicio</span>
-                    <span>{{ $showtime['basePrice'] }}</span>
+                    <span>{{ number_format($showtime['basePrice'],2) }}</span>
                 </div>
 
                 <hr style="border-color: rgba(255,255,255,.08);">

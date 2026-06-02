@@ -8,8 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/kepler-csharp/events-online-users@main/public/css/showEvent.css" rel="stylesheet">
-
+   <link href="https://cdn.jsdelivr.net/gh/kepler-csharp/events-online-users@main/public/css/showEvent.css" rel="stylesheet">
 </head>
 <body>
 
@@ -80,7 +79,7 @@
                 <div class="w-100">
 
                     <h1 class="event-title">
-                        {{ $event['name'] }} 
+                        {{ $event['name'] }}
                     </h1>
 
                     <div class="event-meta">
@@ -108,14 +107,19 @@
 
             <div class="purchase-content">
 
-                <!-- TICKETS -->
+                 <!-- TICKETS -->
                 <section>
-                    <h3 class="section-title">
+                    <h3 class="section-title d-flex justify-content-center ">
                         Asientos disponibles:
-                        <span>{{ $showtime['availableSeats'] }}</span>
                     </h3>
+                    <h1 class="">
+                        <div class="ms-2 d-flex justify-content-center">
+                            <span class="badge bg-success">{{ $showtime['availableSeats'] }}</span>
+                        </div>
+                    </h2>
                 </section>
-                {{--               
+
+                {{--
                 <div class="ticket-grid">
                     <div class="ticket-option">
                         <checkbox>
@@ -148,7 +152,7 @@
                     </div>
                 </div>
                 --}}
-                
+
                 <!-- SCREEN -->
                 <div class="screen"></div>
 
@@ -156,23 +160,8 @@
                     ESCENARIO
                 </div>
 
-                <!-- SEATS -->
-                <h3 class="section-title">
-                    Selecciona tus puestos
-                </h3>
-
-                <div class="seats-wrapper">
-                    @foreach($seats as $seat)
-                        <div class="seat {{ $seat['status']? 'occupied' : 'available' }}"
-                            data-seat-id="{{ $seat['id'] }}">
-
-                            {{ $seat['row'] }}{{ $seat['number'] }}
-                        </div>
-                    @endforeach
-                </div>
-
-                <!-- LEGEND -->
-                <div class="legend">
+                <!-- LEGEND INSTRUCTOR -->
+                 <div class="legend">
                     <div class="legend-item">
                         <div class="legend-box" style="background: var(--dark-soft)"></div>
                         Disponible
@@ -187,7 +176,21 @@
                         <div class="legend-box" style="background: #1f2123"></div>
                         Ocupado
                     </div>
+                </div>
 
+                <!-- SEATS -->
+                <h3 class="section-title-seat d-flex justify-content-center">
+                    Selecciona tus puestos
+                </h3>
+
+                <div class="seats-wrapper">
+                    @foreach($seats as $seat)
+                        <div class="seat {{ $seat['status']? 'occupied' : 'available' }}"
+                            data-seat-id="{{ $seat['id'] }}">
+
+                            {{ $seat['row'] }}{{ $seat['number'] }}
+                        </div>
+                    @endforeach
                 </div>
 
             </div>
@@ -203,7 +206,7 @@
 
             {{-- Form to all data send --}}
             <form action="{{ route('event.reservation', $showtime['id']) }}" method="POST" class="summary-form">
-                @csrf   
+                @csrf
                 <input type="hidden"
                         name="seats"
                         id="selectedSeats">
@@ -216,7 +219,7 @@
 
                     <input type="text"
                             class="form-control custom-input"
-                            value="{{ session('user.name') }}" 
+                            value="{{ session('user.name') }}"
                             readonly>
                 </div>
 
@@ -227,12 +230,12 @@
 
                     <input type="email"
                             class="form-control custom-input"
-                            value="{{ session('user.email') }}" 
+                            value="{{ session('user.email') }}"
                             readonly>
                 </div>
                 {{-- Form of details reservation --}}
                 <div class="summary-box">
-                        
+
                     <div class="summary-item">
                         <span>Tipo</span>
                         <span id="ticket-type" class="badge bg-dark">GENERAL</span>
