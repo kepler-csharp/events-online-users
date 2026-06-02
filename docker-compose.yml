@@ -1,29 +1,83 @@
-```yaml
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: laravel_app
-    restart: unless-stopped
-    working_dir: /var/www
-    networks:
-      - laravel
+name: production
+on:
+  push:
+    branches:
+      - main
 
-  nginx:
-    image: nginx:stable-alpine
-    container_name: laravel_nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - ./:/var/www
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - app
-    networks:
-      - laravel
+permissions:
+  contents: read
+  packages: write
 
-networks:
-  laravel:
-```
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "${{ secrets.TOKEN }}" | docker login ghcr.io -u github-actions --password-stdin
+
+            IMAGE="ghcr.io/${{ github.repository }}:latest"
+            docker pull "$IMAGE"
+
+            docker stop events-online-users || true
+            docker rm events-online-users || true
+
+            docker run -d \
+              --name events-online-users \
+              -p 9000:9000 \
+              --restart always \
+              "$IMAGE"
+
+            sleep 5
+            docker ps | grep events-online-users || (echo "Container failed to start" && exit 1)
+
+            # Copiar TODO el proyecto al host para que nginx lo sirva
+            docker cp events-online-users:/var/www/html/. /var/www/html/
+
+            # Permisos correctos
+            chown -R www-data:www-data /var/www/html
+            chmod -R 755 /var/www/html
+            chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+            # Verificar que index.php existe
+            ls -la /var/www/html/public/index.php
+
+            sudo systemctl reload nginx
