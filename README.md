@@ -96,6 +96,8 @@ $response = Http::withToken(session('auth_token'))
  
 Configurar el archivo `.env`:
  
+ - Agregar la siguiente linea o copiar el archiv .example del proyecto
+
 ```env
 AUTH_SERVICE_URL=http://localhost:5201
 ```
@@ -113,7 +115,7 @@ git clone <repository-url>
 ### 2. Entrar al proyecto
  
 ```bash
-cd TicketNow
+cd events-online-users
 ```
  
 ### 3. Instalar dependencias
