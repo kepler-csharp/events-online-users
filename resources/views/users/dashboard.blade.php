@@ -21,8 +21,8 @@
         <a href="{{ url('/dashboard') }}" class="nav-item active">
             <i class="bi bi-grid-1x2-fill"></i> Mi Panel
         </a>
-        <a href="#mis-eventos" class="nav-item">
-            <i class="bi bi-ticket-perforated"></i> Mis Entradas
+        <a href="{{ route('welcome') }}" class="nav-item">
+            <i class="bi bi-house fw-bolder" style="transform: scale(1.4)"></i> Página principal
         </a>
         <a href="{{ url('/') }}#events" class="nav-item">
             <i class="bi bi-calendar3"></i> Explorar Eventos
@@ -121,7 +121,7 @@
             <div class="stat-card" style="animation-delay:.05s">
                 <div class="stat-icon"><i class="bi bi-ticket-perforated-fill"></i></div>
                 <div>
-                    <div class="stat-label">Total de entradas</div>
+                    <div class="stat-label">Total de boletas</div>
                     <div class="stat-value">{{ $totalEntradas }}</div>
                 </div>
             </div>

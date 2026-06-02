@@ -38,10 +38,10 @@
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav mx-auto gap-md-2">
                 <li class="nav-item"><a class="nav-link" href="#events">Eventos</a></li>
-                <li class="nav-item"><a class="nav-link" href="#tickets">Entradas</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Entradas</a></li>
                 <li class="nav-item"><a class="nav-link" href="#how">¿Cómo funciona?</a></li>
-                <li class="nav-item"><a class="nav-link" href="#contact">Contacto</a></li>
             </ul>
+
             <div class="d-flex gap-4 mt-2 mt-md-0">
                 @if (Route::has('login'))
                     @if (session('user') && session('auth_token'))
@@ -59,6 +59,7 @@
                     @endauth
                 @endif
             </div>
+
         </div>
     </div>
 </nav>
@@ -75,6 +76,7 @@
                     Conciertos, festivales, teatro, deportes y más. Encuentra, compra y disfruta tu entrada en
                     minutos. Sin complicaciones.
                 </p>
+
                 <div class="d-flex gap-3 flex-wrap">
                     <a href="#events" class="btn-primary-custom">Ver eventos <i
                             class="bi bi-arrow-right ms-1"></i></a>
@@ -82,7 +84,7 @@
                 </div>
                 <div class="hero-stats row g-0">
                     <div class="col-4 text-center">
-                        <div class="hero-stat-val">+500</div>
+                        <div class="hero-stat-val">{{ count($events) }}</div>
                         <div class="hero-stat-label">Eventos activos</div>
                     </div>
                     <div class="col-4 text-center"
@@ -99,33 +101,77 @@
 
             {{-- Visual card --}}
             <div class="col-lg-6">
+               @if($featuredEvent && $featuredShowtime)
                 <div class="hero-card">
                     <div
                         style="font-size:.75rem;font-weight:700;letter-spacing:.08em;color:var(--gray);text-transform:uppercase;margin-bottom:1rem;">
-                        <i class="bi bi-fire me-1" style="color:var(--orange)"></i> Evento destacado
+                        <i class="bi bi-fire me-1" style="color:var(--orange)"></i>
+                        Evento destacado
                     </div>
+
                     <div class="hero-card-event">
                         <div style="display:flex;justify-content:space-between;align-items:flex-start">
                             <div>
-                                <div class="hero-card-event-name">Festival Electrónico 2025</div>
-                                <div class="hero-card-event-date"><i class="bi bi-calendar3 me-1"></i>15 Ago ·
-                                    Medellín</div>
+                                <div class="hero-card-event-name">
+                                    {{ $featuredEvent['name'] }}
+                                </div>
+
+                                <div class="hero-card-event-date">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    {{ \Carbon\Carbon::parse($featuredShowtime['startTime'])->format('d/m/Y H:i') }}
+                                    · {{ $featuredEvent['venueCity'] }}
+                                </div>
                             </div>
-                            <span style="font-size:1.5rem">🎵</span>
+
+                            <span style="font-size:1.5rem">
+                                <i class="bi bi-stars"></i>
+                            </span>
                         </div>
-                        <span class="ticket-badge">Pocas entradas</span>
+
+                        <span class="ticket-badge">Cine y más</span>
                     </div>
+
                     <div class="ticket-row">
                         <div>
-                            <div style="font-weight:600;font-size:.875rem">General</div>
-                            <div class="ticket-avail"><i class="bi bi-people-fill me-1"></i>142 disponibles</div>
+                            <div style="font-weight:600;font-size:.875rem">
+                                @switch($featuredEvent['type'])
+                                    @case(0)
+                                        Pelicula
+                                        @break
+                                    @case(1)
+                                        Concierto
+                                        @break
+                                    @case(2)
+                                        Teatro
+                                        @break
+                                    @case(3)
+                                        Deporte
+                                        @break
+                                    @case(4)
+                                        Otro / Conferencia
+                                        @break
+                                    @default
+                                        Sin clasificar
+                                @endswitch
+                            </div>
+                            <div class="ticket-avail">
+                                <i class="bi bi-geo-alt-fill me-1"></i>
+                                {{ $featuredEvent['venueName'] ?? 'Lugar por confirmar' }}
+                            </div>
                         </div>
+
                         <div class="d-flex align-items-center gap-3">
-                            <span class="ticket-price">$120.000</span>
-                            <button class="btn-ticket-sm">Comprar</button>
+                            <a href="#eventModal{{ $featuredEvent['id'] }}"
+                            data-bs-toggle="modal"
+                            class="btn-ticket-sm text-decoration-none">
+                                Ver evento
+                            </a>
                         </div>
                     </div>
-                    <div class="ticket-row">
+                </div>
+                @endif
+
+{{--                     <div class="ticket-row">
                         <div>
                             <div style="font-weight:600;font-size:.875rem">VIP</div>
                             <div class="ticket-avail"><i class="bi bi-star-fill me-1"
@@ -135,7 +181,8 @@
                             <span class="ticket-price">$280.000</span>
                             <button class="btn-ticket-sm">Comprar</button>
                         </div>
-                    </div>
+                    </div> --}}
+
                 </div>
             </div>
 
@@ -197,32 +244,44 @@
 
         <div class="row g-4">
             @foreach ($events as $e)
+            @php
+                $showtimeEvent = collect($showtimes)->where('eventId', $e['id'])->first();
+               /*  dd($eStatus); */
+            @endphp
             <div class="col-sm-6 col-lg-3">
                 <div class="event-card">
                     <div class="event-image-container">
                         <img src="{{ $e['posterUrl'] }}" alt="Evento" class="event-img">
 
-                        <span class="event-status active">
-                            {{ $e['isActive']? 'Activo' : 'Inactivo' }}
-                        </span>
+                        @if($showtimeEvent['availableSeats'] > 0)
+                            <span class="event-status active">
+                                Disponible
+                            </span>
+                        @else
+                            <span class="event-status inactive">
+                                Agotado
+                            </span>
+                        @endif
                     </div>
                     <div class="event-body">
                         <div class="event-name">{{ $e['name'] }}</div>
                         <div class="event-meta">
-                            <i class="bi bi-calendar3"></i>{{ $e['createdAt'] }}<br>
+                            <i class="bi bi-calendar3"></i>{{ \Carbon\Carbon::parse($showtimeEvent['endTime'])->format('Y-m-d H:i') }}<br>
                             <i class="bi bi-geo-alt-fill"></i>{{ $e['venueName'] }}
                         </div>
                         <div class="event-prices">
                             <span class="price-pill pill-general">General {{-- {{ $e['general'] }} --}}</span>
-                            <span class="price-pill pill-vip"><i class="bi bi-star-fill me-1"></i>VIP
-                                {{-- {{ $e['vip'] }} --}}</span> 
+{{--                             <span class="price-pill pill-vip"><i class="bi bi-star-fill me-1"></i>VIP
+                                {{ $e['vip'] }}</span>  --}}
                         </div>
+                        @if($showtimeEvent['availableSeats'] > 0)
                         <a href="#" 
                             class="btn-buy"
                             data-bs-toggle="modal"
                             data-bs-target="#eventModal{{ $e['id'] }}">
                             Ver evento →
                         </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -294,8 +353,12 @@
     </div>
 </footer>
 
+{{-- Modal to details of events --}}
 @foreach ($events as $e)
-
+    @php
+        $showtimeEvent = collect($showtimes)->where('eventId', $e['id'])->first();
+        /*  dd($eStatus); */
+    @endphp
 <div class="modal fade" id="eventModal{{ $e['id'] }}" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content event-modal">
@@ -321,8 +384,11 @@
 
                             <div class="event-modal-meta">
                                 <div>
-                                    <i class="bi bi-calendar-event"></i>
-                                    {{ $e['createdAt'] }}
+                                    <i class="bi bi-calendar-event"></i><span class="ms-1"><b>Inicio:</b></span>
+                                        {{ \Carbon\Carbon::parse($showtimeEvent['startTime'])->format('Y-m-d H:i') }}<br />
+
+                                    <i class="bi bi-calendar-event"></i><span class="ms-1"><b>Fin del evento:</b></span>
+                                        {{ \Carbon\Carbon::parse($showtimeEvent['endTime'])->format('Y-m-d H:i') }}
                                 </div>
 
                                 <div>
@@ -338,7 +404,7 @@
                             </div>
 
                             <div class="event-price">
-                                $80K
+                                {{ number_format($showtimeEvent['basePrice'],2) }} COP
                             </div>
                         </div>
 
@@ -354,26 +420,33 @@
                     <div class="row g-3 mt-3">
 
                         <div class="col-md-6">
+                            <a href="{{ route('events.show', $e['id']) }}"
+                                class="btn btn-buy px-4">
                             <div class="ticket-option">
                                 <h5>General</h5>
                                 <p>Acceso estándar al evento.</p>
 
                                 <div class="ticket-price-small">
-                                    $80.000
+                                     {{ number_format($showtimeEvent['basePrice'],2) }} COP
                                 </div>
                             </div>
+                            </a>
                         </div>
 
                         <div class="col-md-6">
+                            <a href="{{ route('events.show', $e['id']) }}"
+                                    class="btn btn-buy px-4">
                             <div class="ticket-option vip">
                                 <h5>VIP</h5>
                                 <p>Zona preferencial + beneficios exclusivos.</p>
 
                                 <div class="ticket-price-small">
-                                    $200.000
+                                    {{ number_format($showtimeEvent['basePrice'] * 2.5,2) }} COP
                                 </div>
                             </div>
+                            </a>
                         </div>
+                        
 
                     </div>
 
@@ -383,11 +456,11 @@
                                 data-bs-dismiss="modal">
                             Cerrar
                         </button>
-
+{{-- 
                         <a href="{{ route('events.show', $e['id']) }}"
                            class="btn btn-buy px-4">
                             Comprar entrada
-                        </a>
+                        </a> --}}
 
                     </div>
 

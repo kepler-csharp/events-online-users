@@ -47,7 +47,7 @@ class AuthController extends Controller
                     ]
                 ]);
                 // Redirect to dashboard or intended page
-                return redirect()->intended('/')->withErrors(['success' => 'Bienvenido. '. session('user.name')]); // Redirect to dashboard or intended page
+                return redirect()->intended('/dashboard')->withErrors(['success' => 'Bienvenido. '. session('user.name')]); // Redirect to dashboard or intended page
             case 401:
                 // Authentication failed
                 return back()->withErrors(['error' => 'Invalid email or password.']);
@@ -81,16 +81,30 @@ class AuthController extends Controller
                     ->with(['success' => 'Customer created successfully. Please login to continue.']);
                 break;
             case 400:
-                //Somenthing went wrong
-                return back()->withErrors(['error' => 'Password must have at least 8 characters.'.$response->body()]);
+                // BAD REQUEST, validation errors
+                /* dd('desde 400',$response->json()); */
+                // Function refactoring needed to handle validation errors from the auth service
+                /* return back()->withErrors(['error' => 'Password must have at least 8 characters.'.$response->json()]); */
+                
+                $descriptionErr = collect($response->json())
+                    ->pluck('description');
+                /* dd('desde 400',$response->json(), $descriptionErr);  */
+                return back()
+                    ->withErrors([
+                        'api_error' => $descriptionErr
+                    ])
+                    ->withInput();
+                    
                 break;
             case 500:
+                dd('desde 500',$response->json());
                 //Somenthing went wrong
-                return back()->withErrors(['error' => 'Somenthing went wrong.'.$response->body()]);
+                return back()->withErrors(['error' => 'Somenthing went wrong.'.$response->json()]);
                 break;
             default:
+                dd('desde default',$response->json());
                 //Somenthing else went wrong
-                return back()->withErrors(['error' => 'Somenthing else went wrong.'.$response->body()]);
+                return back()->withErrors(['error' => 'Somenthing else went wrong.'.$response->json()]);
                 break;
         }
         

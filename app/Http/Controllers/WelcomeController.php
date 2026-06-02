@@ -16,22 +16,45 @@ class WelcomeController extends Controller
 
     public function showEvents()
     {
-        try{
+        try {
             $events = Http::get(config('services.auth_service.url') . '/api/events');
+            $showtimes = Http::get(config('services.auth_service.url') . '/api/showtimes');
 
-        }catch(\Exception $e){
-            return response()->json(['error' => 'Error fetching events: ' . $e->getMessage()], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error fetching events: ' . $e->getMessage()
+            ], 500);
         }
-        
-        if($events->status() === 200){
-            
+
+        if ($events->successful() && $showtimes->successful()) {
+            // Validate the date of startTime of showtimes to be greater than the current date
             $events = $events->json()['data']['items'];
-           
-            return view('welcome', compact('events'));
-        }else{
-            return response()->json(['error' => 'Failed to fetch events'], $events->status());
-        }   
-        
+            $showtimes = $showtimes->json()['data']['items'];
+/*             dd(collect($events)->where('isActive', true), collect($showtimes)->where('availableSeats', '>', 0)); */
+
+
+            // Take the next showtime with available seats and the event of that showtime
+            usort($showtimes, function ($a, $b) {
+                return strtotime($a['startTime']) <=> strtotime($b['startTime']);
+            });
+
+            $featuredShowtime = $showtimes[1] ?? null;
+
+            $featuredEvent = collect($events)
+                ->firstWhere('id', $featuredShowtime['eventId'] ?? null);
+            /* dd($featuredEvent, $featuredShowtime, $events, $showtimes); */
+            /* dd($featuredEvent, $featuredShowtime, $events, $showtimes); */
+            return view('welcome', compact(
+                'events', // all events general
+                'showtimes', // all showtimes of her event
+                'featuredEvent', // the event of the next showtime
+                'featuredShowtime' // the next showtime
+            ));
+        }
+
+        return response()->json([
+            'error' => 'Failed to fetch events'
+        ], $events->status());
     }
 
     public function showEventDetails($id)

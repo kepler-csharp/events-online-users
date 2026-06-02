@@ -7,8 +7,8 @@
     <title>Registro - {{ config('app.name') }}</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
     <link href="https://cdn.jsdelivr.net/gh/kepler-csharp/events-online-users@main/public/css/login.css" rel="stylesheet">
+    {{-- <link href="{{ asset('css/login.css') }}" rel="stylesheet"> --}}
 </head>
 
 <body>
@@ -19,25 +19,36 @@
 
     <!-- REGISTER -->
     <div class="login-card">
-        @if ($errors->has('error'))
+        @if ($errors->has('error')|| $errors->has('api_error'))
             <div class="login-alert">
 
-                <div class="login-alert-icon">
+                <div class="login-alert-icon me-1">
                     <i class="bi bi-exclamation-triangle-fill"></i>
                 </div>
 
                 <div class="login-alert-content">
-                    <span>Error de autenticación</span>
-                    <p>{{ $errors->first('error') }}</p>
+                    <span>Ups! Intenta de nuevo</span>
+
+                    <ul class="mb-0 mt-2 ms-1">
+                        @foreach ($errors->get('error') as $message)
+                            <span class="mt-1 d-block">{{ $message }}</span>
+                        @endforeach
+                        @foreach ($errors->get('api_error') as $message)
+                            <span class="mt-1 d-block">{{ $message }}</span>
+                        @endforeach
+                    </ul>
                 </div>
 
-                <button type="button" class="login-alert-close" onclick="this.parentElement.remove()">
-
+                <button
+                    type="button"
+                    class="login-alert-close"
+                    onclick="this.parentElement.remove()">
                     <i class="bi bi-x"></i>
                 </button>
 
             </div>
         @endif
+
         <div class="logo">
             <i class="bi bi-ticket-perforated-fill"></i>
             Ticket<span>Now</span>
@@ -58,12 +69,13 @@
 
             <!-- NOMBRE -->
             <div class="input-group">
-                <label class="input-label">Nombre completo</label>
+                <label class="input-label">Username <span style="color:red">*</span></label>
 
                 <div class="input-box">
                     <i class="bi bi-person"></i>
 
-                    <input type="text" name="fullName" placeholder="Juan Pérez">
+                    <input type="text" name="fullName" placeholder="Juan" required>
+
                 </div>
                 @error('fullName')
                     <small class="input-error">
@@ -74,12 +86,12 @@
 
             <!-- CORREO -->
             <div class="input-group">
-                <label class="input-label">Correo electrónico</label>
+                <label class="input-label">Correo electrónico <span style="color:red">*</span></label>
 
                 <div class="input-box">
                     <i class="bi bi-envelope"></i>
 
-                    <input type="email" name="email" placeholder="ejemplo@correo.com">
+                    <input type="email" name="email" placeholder="ejemplo@correo.com" required>
                 </div>
                 @error('email')
                     <small class="input-error">
@@ -113,6 +125,11 @@
 
                     <input type="password" name="password_confirmation" placeholder="********" required>
                 </div>
+                @error('password_confirmation')
+                    <small class="input-error">
+                        {{ $message }}
+                    </small>
+                @enderror
             </div>
 
             <button class="login-btn" type="submit">

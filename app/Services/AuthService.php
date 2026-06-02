@@ -28,12 +28,19 @@ class AuthService
     }
 
     public function createCustomer(Request $request){
+
         //Validate request form
         $request->validate([
-            'fullName' => 'required|string',
+            'fullName' => 'required|string|max:255|min:3', // Only letters and spaces allowed
             'email' => 'required|email',
-            'password' => 'required|string',
-            'password_confirmation' => 'required|string'
+            'password' => 'required',
+                'string',
+                'min:8',
+                'regex:/[a-z]/',      // required lowercase letter
+                'regex:/[A-Z]/',      // required uppercase letter
+                'regex:/[0-9]/',      // required digit
+                'regex:/[@$!%*#?&._\-]/', // required special character
+            'password_confirmation' => 'required|string|same:password',
         ]);
 
         try{
