@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/kepler-csharp/events-online-users@main/public/css/welcome.css"
         rel="stylesheet">
-
+    <link href="{{ asset('css/welcome.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -297,7 +297,7 @@
 </section>
 
 {{-- HOW IT WORKS --}}
-<section id="how" style="background-color: fffff">
+<section id="how">
     <div class="container">
         <div class="text-center mb-5">
             <div class="section-tag">Proceso</div>
@@ -363,6 +363,7 @@
 @foreach ($events as $e)
     @php
         $showtimeEvents = collect($showtimes)->where('eventId', $e['id'])->all();
+        $thisShowtime = collect($showtimes)->where('eventId', $e['id'])->first();
     @endphp
 
     <div class="modal fade" id="eventModal{{ $e['id'] }}" tabindex="-1">
@@ -372,10 +373,36 @@
                 <div class="event-image-container modal-banner">
 
                     <img src="{{ $e['posterUrl'] }}" class="event-img" alt="{{ $e['name'] }}">
+                    @switch($showtimeEvent['status'])
+                        @case(0)
+                            <span class="event-status active">
+                                Disponible
+                            </span>
+                        @break
 
-                    <span class="event-status active">
-                        {{ $e['isActive'] ? 'Activo' : 'Inactivo' }}
-                    </span>
+                        @case(1)
+                            <span class="event-status inactive">
+                                Cancelado
+                            </span>
+                        @break
+
+                        @case(2)
+                            <span class="event-status inactive">
+                                Completado
+                            </span>
+                        @break
+
+                        @case(3)
+                            <span class="event-status inactive">
+                                Agotado
+                            </span>
+                        @break
+
+                        @default
+                            <span class="event-status active">
+                                Pre Venta
+                            </span>
+                    @endswitch
 
                     <div class="modal-banner-overlay">
 
