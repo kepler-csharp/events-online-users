@@ -1,4 +1,4 @@
-# 🎟️ TicketNow
+# 🎟️ Ticket Now
  
 Sistema web desarrollado en **Laravel** para la compra y gestión de tickets de eventos mediante una arquitectura basada en consumo de APIs externas, utilizando autenticación **JWT** y sesiones persistentes.
  
