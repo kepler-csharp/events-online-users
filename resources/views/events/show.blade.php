@@ -1,125 +1,125 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles del Evento — {{ config('app.name', 'TicketNow') }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet">
-   <link href="https://cdn.jsdelivr.net/gh/kepler-csharp/events-online-users@main/public/css/showEvent.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    {{--   <link href="https://cdn.jsdelivr.net/gh/kepler-csharp/events-online-users@main/public/css/showEvent.css" rel="stylesheet"> --}}
+    @vite(['resources/css/showEvent.css'])
 </head>
+
 <body>
 
-<div class="container purchase-wrapper">
-    <!-- TOP NAV -->
-    <div class="purchase-topbar">
+    <div class="container purchase-wrapper">
+        <!-- TOP NAV -->
+        <div class="purchase-topbar">
 
-        <a href="{{ route('dashboard') }}"
-        class="topbar-link">
+            <a href="{{ route('dashboard') }}" class="topbar-link">
 
-            <i class="bi bi-arrow-left"></i>
+                <i class="bi bi-arrow-left"></i>
 
-            Volver al dashboard
+                Volver al dashboard
 
-        </a>
+            </a>
 
-        <div class="topbar-divider"></div>
+            <div class="topbar-divider"></div>
 
-        <a href="{{ url()->previous() }}"
-        class="topbar-link secondary">
+            <a href="{{ url()->previous() }}" class="topbar-link secondary">
 
-            <i class="bi bi-grid"></i>
+                <i class="bi bi-grid"></i>
 
-            Volver a eventos
+                Volver a eventos
 
-        </a>
-
-    </div>
-
-    @if($errors->any())
-        <div class="custom-alert error-alert">
-
-            <div class="alert-icon">
-                <i class="bi bi-exclamation-triangle-fill"></i>
-            </div>
-
-            <div class="alert-content">
-                <strong>{{ $errors->first('error') }}</strong>
-
-                <p>
-                    {{ session('error') }}
-                </p>
-            </div>
-
-            <button type="button"
-                    class="alert-close"
-                    onclick="this.parentElement.remove()">
-
-                <i class="bi bi-x-lg"></i>
-
-            </button>
+            </a>
 
         </div>
-    @endif
-    <div class="purchase-layout">
 
-        <!-- LEFT -->
-        <div class="main-card">
-            <div class="event-top">
-                <div class="event-image">
-                    <img src="{{ $event['posterUrl'] }}">
+        @if ($errors->any())
+            <div class="custom-alert error-alert">
 
-                    <div class="event-status active">
-                        {{ $event['isActive'] ? 'Activo' : 'Inactivo' }}
-                    </div>
+                <div class="alert-icon">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
                 </div>
 
-                <div class="w-100">
+                <div class="alert-content">
+                    <strong>{{ $errors->first('error') }}</strong>
 
-                    <h1 class="event-title">
-                        {{ $event['name'] }}
-                    </h1>
-
-                    <div class="event-meta">
-
-                        <div>
-                            <i class="bi bi-calendar-event"></i>
-                            {{ \Carbon\Carbon::parse($showtime['startTime'])->format('d M Y') }}
-                        </div>
-
-                        <div>
-                            <i class="bi bi-geo-alt"></i>
-                            {{ $event['venueName'] }}
-                        </div>
-
-                    </div>
-
-                    <p class="event-description">
-                        {{ $event['description'] }}<br />
-                        Vive una experiencia inolvidable con uno de los mejores eventos del año.
+                    <p>
+                        {{ session('error') }}
                     </p>
-
                 </div>
+
+                <button type="button" class="alert-close" onclick="this.parentElement.remove()">
+
+                    <i class="bi bi-x-lg"></i>
+
+                </button>
 
             </div>
+        @endif
+        <div class="purchase-layout">
 
-            <div class="purchase-content">
+            <!-- LEFT -->
+            <div class="main-card">
+                <div class="event-top">
+                    <div class="event-image">
+                        <img src="{{ $event['posterUrl'] }}">
 
-                 <!-- TICKETS -->
-                <section>
-                    <h3 class="section-title d-flex justify-content-center ">
-                        Asientos disponibles:
-                    </h3>
-                    <h1 class="">
-                        <div class="ms-2 d-flex justify-content-center">
-                            <span class="badge bg-success">{{ $showtime['availableSeats'] }}</span>
+                        <div class="event-status active">
+                            {{ $event['isActive'] ? 'Activo' : 'Inactivo' }}
                         </div>
-                    </h2>
-                </section>
+                    </div>
 
-                {{--
+                    <div class="w-100">
+
+                        <h1 class="event-title">
+                            {{ $event['name'] }}
+                        </h1>
+
+                        <div class="event-meta">
+
+                            <div>
+                                <i class="bi bi-calendar-event"></i>
+                                {{ \Carbon\Carbon::parse($showtime['startTime'])->format('d M Y') }}
+                            </div>
+
+                            <div>
+                                <i class="bi bi-geo-alt"></i>
+                                {{ $event['venueName'] }}
+                            </div>
+
+                        </div>
+
+                        <p class="event-description">
+                            {{ $event['description'] }}<br />
+                            Vive una experiencia inolvidable con uno de los mejores eventos del año.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="purchase-content">
+
+                    <!-- TICKETS -->
+                    <section>
+                        <h3 class="section-title d-flex justify-content-center ">
+                            Asientos disponibles:
+                        </h3>
+                        <h1 class="">
+                            <div class="ms-2 d-flex justify-content-center">
+                                <span class="badge bg-success">{{ $showtime['availableSeats'] }}</span>
+                            </div>
+                            </h2>
+                    </section>
+
+                    {{--
                 <div class="ticket-grid">
                     <div class="ticket-option">
                         <checkbox>
@@ -153,307 +153,299 @@
                 </div>
                 --}}
 
-                <!-- SCREEN -->
-                <div class="screen"></div>
+                    <!-- SCREEN -->
+                    <div class="screen"></div>
 
-                <div class="screen-text">
-                    ESCENARIO
-                </div>
-
-                <!-- LEGEND INSTRUCTOR -->
-                 <div class="legend">
-                    <div class="legend-item">
-                        <div class="legend-box" style="background: var(--dark-soft)"></div>
-                        Disponible
+                    <div class="screen-text">
+                        ESCENARIO
                     </div>
 
-                    <div class="legend-item">
-                        <div class="legend-box" style="background: var(--orange)"></div>
-                        Seleccionado
-                    </div>
-
-                    <div class="legend-item">
-                        <div class="legend-box" style="background: #1f2123"></div>
-                        Ocupado
-                    </div>
-                </div>
-
-                <!-- SEATS -->
-                <h3 class="section-title-seat d-flex justify-content-center">
-                    Selecciona tus puestos
-                </h3>
-
-                <div class="seats-wrapper">
-                    @foreach($seats as $seat)
-                        <div class="seat {{ $seat['status']? 'occupied' : 'available' }}"
-                            data-seat-id="{{ $seat['id'] }}">
-
-                            {{ $seat['row'] }}{{ $seat['number'] }}
+                    <!-- LEGEND INSTRUCTOR -->
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-box" style="background: var(--dark-soft)"></div>
+                            Disponible
                         </div>
-                    @endforeach
+
+                        <div class="legend-item">
+                            <div class="legend-box" style="background: var(--orange)"></div>
+                            Seleccionado
+                        </div>
+
+                        <div class="legend-item">
+                            <div class="legend-box" style="background: #1f2123"></div>
+                            Ocupado
+                        </div>
+                    </div>
+
+                    <!-- SEATS -->
+                    <h3 class="section-title-seat d-flex justify-content-center">
+                        Selecciona tus puestos
+                    </h3>
+
+                    <div class="seats-wrapper">
+                        @foreach ($seats as $seat)
+                            <div class="seat {{ $seat['status'] ? 'occupied' : 'available' }}"
+                                data-seat-id="{{ $seat['id'] }}">
+
+                                {{ $seat['row'] }}{{ $seat['number'] }}
+                            </div>
+                        @endforeach
+                    </div>
+
                 </div>
 
             </div>
 
+            <!-- RIGHT -->
+            <div class="summary-card">
+
+                <h3 class="summary-title">
+                    Resumen de compra
+                </h3>
+
+                {{-- Form to all data send --}}
+                <form action="{{ route('event.reservation', $showtime['id']) }}" method="POST" class="summary-form">
+                    @csrf
+                    <input type="hidden" name="seats" id="selectedSeats">
+
+                    <div class="mb-3">
+
+                        <label class="mb-2">
+                            Nombre completo
+                        </label>
+
+                        <input type="text" class="form-control custom-input" value="{{ session('user.name') }}"
+                            readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="mb-2">
+                            Correo electrónico
+                        </label>
+
+                        <input type="email" class="form-control custom-input" value="{{ session('user.email') }}"
+                            readonly>
+                    </div>
+                    {{-- Form of details reservation --}}
+                    <div class="summary-box">
+
+                        <div class="summary-item">
+                            <span>Tipo</span>
+                            <span id="ticket-type" class="badge bg-dark">GENERAL</span>
+                        </div>
+
+                        <div class="summary-item">
+                            <span>Puestos</span>
+                            <span id="selected-seats"></span> {{-- Render by JavaScript --}}
+                        </div>
+
+                        <div class="summary-item">
+                            <span>Cantidad</span>
+                            <span id="quantity-seats"></span> {{-- Render by JavaScript --}}
+                        </div>
+
+                        <div class="summary-item">
+                            <span>Servicio</span>
+                            <span id="ticket-price" data-price="{{ $showtime['basePrice'] }}">
+
+                                ${{ number_format($showtime['basePrice'], 0, ',', '.') }}
+
+                            </span>
+                        </div>
+
+                        <hr>
+
+                        <div class="summary-total">
+                            <span>Total</span>
+                            <span id="total-price">{{-- Render by JavaScript --}}</span>
+                        </div>
+
+                    </div>
+
+                    <button class="btn-buy">
+                        Confirmar compra
+                    </button>
+
+                </form>
+
+            </div>
         </div>
 
-        <!-- RIGHT -->
-        <div class="summary-card">
-
-            <h3 class="summary-title">
-                Resumen de compra
-            </h3>
-
-            {{-- Form to all data send --}}
-            <form action="{{ route('event.reservation', $showtime['id']) }}" method="POST" class="summary-form">
-                @csrf
-                <input type="hidden"
-                        name="seats"
-                        id="selectedSeats">
-
-                <div class="mb-3">
-
-                    <label class="mb-2">
-                        Nombre completo
-                    </label>
-
-                    <input type="text"
-                            class="form-control custom-input"
-                            value="{{ session('user.name') }}"
-                            readonly>
-                </div>
-
-                <div class="mb-3">
-                    <label class="mb-2">
-                        Correo electrónico
-                    </label>
-
-                    <input type="email"
-                            class="form-control custom-input"
-                            value="{{ session('user.email') }}"
-                            readonly>
-                </div>
-                {{-- Form of details reservation --}}
-                <div class="summary-box">
-
-                    <div class="summary-item">
-                        <span>Tipo</span>
-                        <span id="ticket-type" class="badge bg-dark">GENERAL</span>
-                    </div>
-
-                    <div class="summary-item">
-                        <span>Puestos</span>
-                        <span id="selected-seats"></span> {{-- Render by JavaScript --}}
-                    </div>
-
-                    <div class="summary-item">
-                        <span>Cantidad</span>
-                        <span id="quantity-seats"></span> {{-- Render by JavaScript --}}
-                    </div>
-
-                    <div class="summary-item">
-                        <span>Servicio</span>
-                        <span id="ticket-price"
-                            data-price="{{ $showtime['basePrice'] }}">
-
-                            ${{ number_format($showtime['basePrice'], 0, ',', '.') }}
-
-                        </span>
-                    </div>
-
-                    <hr>
-
-                    <div class="summary-total">
-                        <span>Total</span>
-                        <span id="total-price">{{-- Render by JavaScript --}}</span>
-                    </div>
-
-                </div>
-
-                <button class="btn-buy">
-                    Confirmar compra
-                </button>
-
-            </form>
-
-        </div>
     </div>
+    <script>
+        /*
+        |--------------------------------------------------------------------------
+        | Obtener sillas disponibles
+        |--------------------------------------------------------------------------
+        */
 
-</div>
-<script>
+        const seats = document.querySelectorAll(
+            '.seat.available'
+        );
 
-    /*
-    |--------------------------------------------------------------------------
-    | Obtener sillas disponibles
-    |--------------------------------------------------------------------------
-    */
+        /*
+        |--------------------------------------------------------------------------
+        | Array de seleccionadas
+        |--------------------------------------------------------------------------
+        */
 
-    const seats = document.querySelectorAll(
-        '.seat.available'
-    );
+        let selectedSeats = [];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Array de seleccionadas
-    |--------------------------------------------------------------------------
-    */
+        /*
+        |--------------------------------------------------------------------------
+        | Elementos resumen
+        |--------------------------------------------------------------------------
+        */
 
-    let selectedSeats = [];
+        const selectedSeatsText = document.getElementById(
+            'selected-seats'
+        ); /* Selected seats text */
 
-    /*
-    |--------------------------------------------------------------------------
-    | Elementos resumen
-    |--------------------------------------------------------------------------
-    */
+        const quantitySeatsText = document.getElementById(
+            'quantity-seats'
+        ); /* Quantity of selected seats */
 
-    const selectedSeatsText = document.getElementById(
-        'selected-seats'
-    );/* Selected seats text */
+        const totalPriceText = document.getElementById(
+            'total-price'
+        ); /* Total price of bough tickets */
 
-    const quantitySeatsText = document.getElementById(
-        'quantity-seats'
-    );/* Quantity of selected seats */
+        const hiddenInput = document.getElementById(
+            'selectedSeats'
+        );
 
-    const totalPriceText = document.getElementById(
-        'total-price'
-    );/* Total price of bough tickets */
+        /*
+        |--------------------------------------------------------------------------
+        | Precio base
+        |--------------------------------------------------------------------------
+        */
 
-    const hiddenInput = document.getElementById(
-        'selectedSeats'
-    );
+        const ticketPrice = parseFloat(
+            document.getElementById(
+                'ticket-price'
+            ).dataset.price
+        ); /* Price by every ticket */
 
-    /*
-    |--------------------------------------------------------------------------
-    | Precio base
-    |--------------------------------------------------------------------------
-    */
+        /*
+        |--------------------------------------------------------------------------
+        | Click silla
+        |--------------------------------------------------------------------------
+        */
 
-    const ticketPrice = parseFloat(
-        document.getElementById(
-            'ticket-price'
-        ).dataset.price
-    );/* Price by every ticket */
+        seats.forEach(seat => {
 
-    /*
-    |--------------------------------------------------------------------------
-    | Click silla
-    |--------------------------------------------------------------------------
-    */
+            seat.addEventListener('click', () => {
 
-    seats.forEach(seat => {
+                /*
+                |--------------------------------------------------------------------------
+                | Toggle visual
+                |--------------------------------------------------------------------------
+                */
 
-        seat.addEventListener('click', () => {
+                seat.classList.toggle('selected');
 
-            /*
-            |--------------------------------------------------------------------------
-            | Toggle visual
-            |--------------------------------------------------------------------------
-            */
+                /*
+                |--------------------------------------------------------------------------
+                | Obtener id
+                |--------------------------------------------------------------------------
+                */
 
-            seat.classList.toggle('selected');
-
-            /*
-            |--------------------------------------------------------------------------
-            | Obtener id
-            |--------------------------------------------------------------------------
-            */
-
-            const seatId = parseInt(
-                seat.dataset.seatId
-            );
-
-            /*
-            |--------------------------------------------------------------------------
-            | Obtener label visual
-            |--------------------------------------------------------------------------
-            */
-
-            const label = seat.innerText.trim();
-
-            /*
-            |--------------------------------------------------------------------------
-            | Agregar o remover
-            |--------------------------------------------------------------------------
-            */
-
-            if(
-                selectedSeats.some(
-                    s => s.id === seatId
-                )
-            ){
-
-                selectedSeats = selectedSeats.filter(
-                    s => s.id !== seatId
+                const seatId = parseInt(
+                    seat.dataset.seatId
                 );
 
-            }else{
+                /*
+                |--------------------------------------------------------------------------
+                | Obtener label visual
+                |--------------------------------------------------------------------------
+                */
 
-                selectedSeats.push({
-                    id: seatId,
-                    label: label
-                });
+                const label = seat.innerText.trim();
 
-            }
+                /*
+                |--------------------------------------------------------------------------
+                | Agregar o remover
+                |--------------------------------------------------------------------------
+                */
 
-            /*
-            |--------------------------------------------------------------------------
-            | Actualizar hidden input
-            |--------------------------------------------------------------------------
-            */
+                if (
+                    selectedSeats.some(
+                        s => s.id === seatId
+                    )
+                ) {
 
-            hiddenInput.value = JSON.stringify(
-                selectedSeats.map(
-                    s => s.id
-                )
-            );
+                    selectedSeats = selectedSeats.filter(
+                        s => s.id !== seatId
+                    );
 
-            /*
-            |--------------------------------------------------------------------------
-            | Actualizar resumen sillas
-            |--------------------------------------------------------------------------
-            */
+                } else {
 
-            selectedSeatsText.innerText = selectedSeats.length > 0
-                ? selectedSeats.map(s => s.label).join(', ')
-                : 'Ninguno';
-            quantitySeatsText.innerText = selectedSeats.length;
+                    selectedSeats.push({
+                        id: seatId,
+                        label: label
+                    });
 
-            /*
-            |--------------------------------------------------------------------------
-            | Calcular total
-            |--------------------------------------------------------------------------
-            */
+                }
 
-            const total =
-                selectedSeats.length * ticketPrice;
+                /*
+                |--------------------------------------------------------------------------
+                | Actualizar hidden input
+                |--------------------------------------------------------------------------
+                */
 
-            totalPriceText.innerText =
-                '$' + total;
+                hiddenInput.value = JSON.stringify(
+                    selectedSeats.map(
+                        s => s.id
+                    )
+                );
 
-            /*
-            |--------------------------------------------------------------------------
-            | Debug
-            |--------------------------------------------------------------------------
-            */
+                /*
+                |--------------------------------------------------------------------------
+                | Actualizar resumen sillas
+                |--------------------------------------------------------------------------
+                */
 
-            console.log(
-                hiddenInput.value
-            );
+                selectedSeatsText.innerText = selectedSeats.length > 0 ?
+                    selectedSeats.map(s => s.label).join(', ') :
+                    'Ninguno';
+                quantitySeatsText.innerText = selectedSeats.length;
+
+                /*
+                |--------------------------------------------------------------------------
+                | Calcular total
+                |--------------------------------------------------------------------------
+                */
+
+                const total =
+                    selectedSeats.length * ticketPrice;
+
+                totalPriceText.innerText =
+                    '$' + total;
+
+                /*
+                |--------------------------------------------------------------------------
+                | Debug
+                |--------------------------------------------------------------------------
+                */
+
+                console.log(
+                    hiddenInput.value
+                );
+
+            });
 
         });
 
-    });
+        document.addEventListener('DOMContentLoaded', () => {
+            hiddenInput.value = null;
+            selectedSeatsText.innerText = 'Ninguno';
 
-    document.addEventListener('DOMContentLoaded', () => {
-        hiddenInput.value = null;
-        selectedSeatsText.innerText = 'Ninguno';
+            quantitySeatsText.innerText = '0';
 
-        quantitySeatsText.innerText = '0';
-
-        totalPriceText.innerText = '$0';
-    });
-
-</script>
+            totalPriceText.innerText = '$0';
+        });
+    </script>
 
 </body>
+
 </html>

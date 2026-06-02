@@ -7,8 +7,9 @@
     <title>Registro - {{ config('app.name') }}</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://cdn.jsdelivr.net/gh/kepler-csharp/events-online-users@main/public/css/login.css" rel="stylesheet">
+    {{--  <link href="https://cdn.jsdelivr.net/gh/kepler-csharp/events-online-users@main/public/css/login.css" rel="stylesheet"> --}}
     {{-- <link href="{{ asset('css/login.css') }}" rel="stylesheet"> --}}
+    @vite(['resources/css/register.css'])
 </head>
 
 <body>
@@ -19,7 +20,7 @@
 
     <!-- REGISTER -->
     <div class="login-card">
-        @if ($errors->has('error')|| $errors->has('api_error'))
+        @if ($errors->has('error') || $errors->has('api_error'))
             <div class="login-alert">
 
                 <div class="login-alert-icon me-1">
@@ -39,10 +40,7 @@
                     </ul>
                 </div>
 
-                <button
-                    type="button"
-                    class="login-alert-close"
-                    onclick="this.parentElement.remove()">
+                <button type="button" class="login-alert-close" onclick="this.parentElement.remove()">
                     <i class="bi bi-x"></i>
                 </button>
 

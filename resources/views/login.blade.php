@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión - {{ config('app.name') }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://cdn.jsdelivr.net/gh/kepler-csharp/events-online-users@main/public/css/login.css" rel="stylesheet">
+    {{--   <link href="https://cdn.jsdelivr.net/gh/kepler-csharp/events-online-users@main/public/css/login.css" rel="stylesheet"> --}}
+    @vite(['resources/css/login.css'])
 </head>
 
 <body>
@@ -43,7 +44,7 @@
         @endif
         <!-- LOGIN FORM -->
         <form action="{{ route('login.submit') }}" method="POST">
-                {{-- Email input --}}
+            {{-- Email input --}}
             <div class="input-group">
                 <label class="input-label">Correo electrónico</label>
                 <div class="input-box">
