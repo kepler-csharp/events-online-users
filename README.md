@@ -1,24 +1,24 @@
 # 🎟️ TicketNow
  
 Sistema web desarrollado en **Laravel** para la compra y gestión de tickets de eventos mediante una arquitectura basada en consumo de APIs externas, utilizando autenticación **JWT** y sesiones persistentes.
-
+ 
 ---
-
+ 
 ## 📋 Descripción
-
+ 
 TicketNow es una aplicación web orientada a usuarios que desean:
-
+ 
 - Visualizar eventos disponibles
 - Comprar tickets
 - Gestionar reservas
 - Autenticarse mediante un gateway de autenticación
 - Mantener sesiones persistentes mediante JWT
 El proyecto funciona como cliente frontend en Laravel consumiendo endpoints externos documentados con **Swagger** mediante `Http Client`.
-
+ 
 ---
-
+ 
 ## 🛠️ Tecnologías utilizadas
-
+ 
 | Tecnología | Uso |
 |---|---|
 | Laravel | Framework principal |
@@ -28,13 +28,13 @@ El proyecto funciona como cliente frontend en Laravel consumiendo endpoints exte
 | JSON Web Token | Autenticación |
 | Bootstrap | Estilos y UI |
 | Laravel HTTP Client | Consumo de APIs externas |
-
+ 
 ---
-
+ 
 ## 🏗️ Arquitectura
-
+ 
 El proyecto utiliza una arquitectura desacoplada donde:
-
+ 
 - Laravel funciona como aplicación independiente frontend/backend híbrida
 - Los datos y autenticación son consumidos desde APIs externas
 - La autenticación se realiza mediante JWT
@@ -55,11 +55,11 @@ Authentication Service + Event Services
         ▼
 MySQL
 ```
-
+ 
 ---
-
+ 
 ## ✅ Funcionalidades
-
+ 
 - [x] Login de usuarios
 - [x] Registro de usuarios
 - [x] Landing page con eventos disponibles
@@ -71,11 +71,11 @@ MySQL
 - [x] Validación de autenticación mediante token
 - [x] Logout de sesión
 ---
-
+ 
 ## 🔐 Sistema de autenticación
-
+ 
 La autenticación funciona mediante:
-
+ 
 1. Laravel consume la API de autenticación externa
 2. La API retorna un **JWT**
 3. Laravel almacena en sesiones:
@@ -84,90 +84,89 @@ La autenticación funciona mediante:
 4. Middleware personalizado protege rutas privadas
 5. Las solicitudes autenticadas utilizan **Bearer Token** mediante `Http Client`
 **Ejemplo:**
-
+ 
 ```php
 $response = Http::withToken(session('auth_token'))
     ->get($endpoint);
 ```
-
+ 
 ---
-
+ 
 ## ⚙️ Variables de entorno necesarias
-
+ 
 Configurar el archivo `.env`:
-
-- Agregar la siguiente línea o copiar el archivo .example del proyecto
+ 
+ - Agregar la siguiente linea o copiar el archiv .example del proyecto
 
 ```env
 AUTH_SERVICE_URL=http://localhost:5201
 ```
-
+ 
 ---
-
+ 
 ## 🚀 Instalación del proyecto
-
+ 
 ### 1. Clonar repositorio
-
+ 
 ```bash
 git clone <repository-url>
 ```
-
+ 
 ### 2. Entrar al proyecto
-
+ 
 ```bash
 cd events-online-users
 ```
-
+ 
 ### 3. Instalar dependencias
-
+ 
 ```bash
 composer install
 npm install
 ```
-
+ 
 ### 4. Configurar variables de entorno
-
+ 
 ```bash
 cp .env.example .env
 ```
-
+ 
 ### 5. Generar key de Laravel
-
+ 
 ```bash
 php artisan key:generate
 ```
-
+ 
 ### 6. Configurar .env (Necesario para Funcionar)
-
  *Gateaway Endpoint:* **https://api.kepler.andrescortes.dev**
  *Variable necesaria en .env:* **AUTH_SERVICE_URL**
 ```bash
 AUTH_SERVICE_URL=endpoints_url
 ```
-
+ 
 ### 8. Iniciar proyecto
-
+ 
 ```bash
 php artisan serve
 npm run dev
 ```
-
+ 
 ---
-
+ 
 ## 🛡️ Middleware personalizado
-
+ 
 El proyecto utiliza middleware personalizado para validar sesiones autenticadas:
-
+ 
 ```php
 if (!session()->has('auth_token')) {
     return redirect('/');
 }
 ```
-
+ 
 ---
-
+ 
 ## 📁 Estructura del proyecto
-
+ 
 ```
 app/
 ├── Http/
@@ -180,39 +179,39 @@ app/
 ├── routes/
 └── config/
 ```
-
+ 
 ---
-
+ 
 ## 🧩 Servicios
-
+ 
 La lógica de negocio se encuentra desacoplada mediante **Services**:
-
+ 
 - `AuthService`
 - `EventService`
 - `ReservationService`
 Esto permite:
-
+ 
 - Controladores limpios
 - Reutilización de código
 - Mantenimiento sencillo
 - Mejor escalabilidad
 ---
-
+ 
 ## 🐳 Docker
-
+ 
 El proyecto utiliza Docker para:
-
+ 
 - Entorno consistente
 - Ejecución de servicios
 - Despliegue simplificado
 ```bash
 docker compose up -d
 ```
-
+ 
 ---
-
+ 
 ## 🔄 Flujo de autenticación
-
+ 
 ```
 Usuario Login
       │
@@ -231,15 +230,15 @@ Laravel Session
       ▼
 Protected Routes
 ```
-
+ 
 ---
-
+ 
 ## 👤 Autor: Stteen A. Rojas S
-
+ 
 Proyecto desarrollado como plataforma de gestión de eventos y tickets utilizando **Laravel** y arquitectura basada en APIs.
-
+ 
 ---
-
+ 
 ## 📄 Licencia
-
+ 
 Proyecto de uso académico y educativo. *Derechos reservados para riwi sas*
