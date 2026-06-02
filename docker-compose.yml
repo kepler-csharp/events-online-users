@@ -1,4 +1,5 @@
 name: production
+
 on:
   push:
     branches:
@@ -12,7 +13,6 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     environment: production
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -43,7 +43,6 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     environment: production
-    
     steps:
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
@@ -69,15 +68,11 @@ jobs:
             sleep 5
             docker ps | grep events-online-users || (echo "Container failed to start" && exit 1)
 
-            # Copiar TODO el proyecto al host para que nginx lo sirva
             docker cp events-online-users:/var/www/html/. /var/www/html/
 
-            # Permisos correctos
             chown -R www-data:www-data /var/www/html
             chmod -R 755 /var/www/html
             chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-            # Verificar que index.php existe
             ls -la /var/www/html/public/index.php
-
-            sudo systemctl reload nginx
+            systemctl reload nginx
