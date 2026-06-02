@@ -61,7 +61,7 @@ jobs:
 
             docker run -d \
               --name events-online-users \
-              -p 9000:9000 \
+              -p 9090:9000 \
               --restart always \
               "$IMAGE"
 
