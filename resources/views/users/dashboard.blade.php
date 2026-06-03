@@ -39,7 +39,7 @@
         </a>
 
         <div class="nav-label">Cuenta</div>
-        <a href="#" class="nav-item">
+        <a href="{{ route('profile') }}" class="nav-item">
             <i class="bi bi-person"></i> Mi Perfil
         </a>
         <a href="#" class="nav-item">

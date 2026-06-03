@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
          $middleware->alias([
             'session.auth' => \App\Http\Middleware\SessionAuth::class,
         ]);
+        $middleware->remove(\Illuminate\Http\Middleware\ValidatePostSize::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
