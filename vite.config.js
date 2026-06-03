@@ -13,7 +13,7 @@ export default defineConfig({
                 'resources/css/paymentEvent.css',
                 'resources/css/showEvent.css',
                 'resources/css/welcome.css', 
-                'resources/css/welcome.css',
+                'resources/css/profile.css',
                 'resources/js/app.js',
             ],
             refresh: true,

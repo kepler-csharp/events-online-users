@@ -87,6 +87,15 @@
     "src": "resources/css/paymentEvent.css",
     "isEntry": true
   },
+  "resources/css/profile.css": {
+    "file": "assets/profile-Cui4Efyg.css",
+    "name": "profile",
+    "names": [
+      "profile.css"
+    ],
+    "src": "resources/css/profile.css",
+    "isEntry": true
+  },
   "resources/css/showEvent.css": {
     "file": "assets/showEvent-Dwury0ut.css",
     "name": "showEvent",
@@ -106,7 +115,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-IXMVDP3H.js",
+    "file": "assets/app-DRzfpUDG.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
