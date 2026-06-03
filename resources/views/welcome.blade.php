@@ -249,7 +249,6 @@
         <div class="row g-4">
 
             @foreach ($events as $e)
-
                 @php
                     $showtimeEvent = $e['nextShowtime'];
                 @endphp
@@ -260,9 +259,7 @@
 
                         <div class="event-image-container">
 
-                            <img src="{{ $e['posterUrl'] }}"
-                                 alt="{{ $e['name'] }}"
-                                 class="event-img">
+                            <img src="{{ $e['posterUrl'] }}" alt="{{ $e['name'] }}" class="event-img">
 
                             @if ($e['availableShowtimes']->count())
                                 <span class="event-status active">
@@ -296,10 +293,8 @@
 
                             </div>
 
-                            <a href="#"
-                               class="btn-buy"
-                               data-bs-toggle="modal"
-                               data-bs-target="#eventModal{{ $e['id'] }}">
+                            <a href="#" class="btn-buy" data-bs-toggle="modal"
+                                data-bs-target="#eventModal{{ $e['id'] }}">
                                 Ver evento →
                             </a>
 
@@ -308,7 +303,6 @@
                     </div>
 
                 </div>
-
             @endforeach
 
         </div>
@@ -396,9 +390,7 @@
                 {{-- Banner --}}
                 <div class="event-image-container modal-banner">
 
-                    <img src="{{ $e['posterUrl'] }}"
-                         class="event-img"
-                         alt="{{ $e['name'] }}">
+                    <img src="{{ $e['posterUrl'] }}" class="event-img" alt="{{ $e['name'] }}">
 
                     @if ($availableShowtimes->count())
                         <span class="event-status active">
@@ -493,13 +485,11 @@
 
                     {{-- Funciones disponibles --}}
                     @if ($availableShowtimes->count())
-
                         <h3 class="text-success fw-bold mb-4">
                             Funciones Disponibles
                         </h3>
 
                         @foreach ($availableShowtimes as $shows)
-
                             <div class="ticket-option-card mb-4">
 
                                 <h5 class="fw-bold">
@@ -541,8 +531,7 @@
                                                 COP
                                             </h3>
 
-                                            <a href="{{ route('events.show', $e['id']) }}"
-                                               class="btn-buy mt-3">
+                                            <a href="{{ route('events.show', $e['id']) }}" class="btn-buy mt-3">
                                                 Comprar General
                                             </a>
 
@@ -572,33 +561,25 @@
                                                 COP
                                             </h3>
 
-                                            <a href="{{ route('events.show', $e['id']) }}"
-                                               class="btn-buy mt-3">
+                                            <a href="{{ route('events.show', $e['id']) }}" class="btn-buy mt-3">
                                                 Comprar VIP
                                             </a>
 
                                         </div>
-
                                     </div>
-
                                 </div>
-
                             </div>
-
                         @endforeach
-
                     @endif
 
 
                     {{-- Funciones vencidas --}}
                     @if ($expiredShowtimes->count())
-
                         <h3 class="text-danger fw-bold mt-5 mb-4">
                             Funciones Finalizadas
                         </h3>
 
                         @foreach ($expiredShowtimes as $shows)
-
                             <div class="ticket-option-card mb-3 opacity-50">
 
                                 <h5>
@@ -618,12 +599,16 @@
                                 <button class="btn btn-secondary" disabled>
                                     Evento finalizado
                                 </button>
-
                             </div>
-
                         @endforeach
-
                     @endif
+
+                    <div class="col-12 d-flex justify-content-end">
+                        <button class="btn btn-outline-secondary" type="button" data-dismiss="modal">
+                            <i class="bi bi-arrow-left-short"></i>
+                            Volver
+                        </button>
+                    </div>
 
                 </div>
 
