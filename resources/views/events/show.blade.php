@@ -179,7 +179,7 @@
                     </div>
 
                     <!-- SEATS -->
-                    <h3 class="section-title-seat d-flex justify-content-center">
+                    <h3 class="section-title-seat d-flex justify-content-center mb-5">
                         Selecciona tus puestos
                     </h3>
 
@@ -188,8 +188,9 @@
                             <div class="seat {{ $seat['status'] ? 'occupied' : 'available' }}"
                                 data-seat-id="{{ $seat['id'] }}">
 
-                                {{ $seat['row'] }}{{ $seat['number'] }}
+                                {{ $seat['row'] }} - {{ $seat['number'] }}
                             </div>
+                            
                         @endforeach
                     </div>
 

@@ -542,8 +542,11 @@
                                                 ${{ number_format($shows['basePrice'], 0, ',', '.') }}
                                                 COP
                                             </h3>
-
-                                            <a href="{{ route('events.show', $e['id']) }}" class="btn-buy mt-3">
+                                            
+                                            <a href="{{ route('events.show', [
+                                                            'id' => $e['id'],
+                                                            'showtime' => $shows['id']
+                                                        ]) }}" class="btn-buy mt-3">
                                                 Comprar General
                                             </a>
 

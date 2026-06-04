@@ -85,21 +85,23 @@ class WelcomeController extends Controller
         ));
     }
 
-    public function showEventDetails($id)
+    public function showEventDetails(Request $request, $id)
     {
+        $showtimeId = $request->query('showtime');
+
         try{
             $event = Http::get(config('services.auth_service.url') . '/api/events/' . $id);
-            $showtime = Http::get(config('services.auth_service.url') . '/api/showtimes/' . $id);
-            $seats = Http::get(config('services.auth_service.url') . '/api/showtimes/' . $id.'/seats');
+            $showtime = Http::get(config('services.auth_service.url') . '/api/showtimes/' . $showtimeId);
+            $seats = Http::get(config('services.auth_service.url') . '/api/showtimes/' . $showtimeId.'/seats');
             }catch(\Exception $e){
             return response()->json(['error' => 'Error fetching event details: ' . $e->getMessage()], 500);
         }
         
         if($event->status() === 200){
             $event = $event->json()['data'];
-            $showtime = $showtime->json()['data'];
+            $showtime = $showtime->json()['data']??[];
             $seats = $seats->json()['data'];
-            
+
             return view('events.show', compact('event', 'showtime', 'seats'));
 
         }else{
