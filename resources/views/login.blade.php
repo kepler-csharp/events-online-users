@@ -76,12 +76,17 @@
                     <input type="checkbox">
                     Recuérdame
                 </label>
-                <a href="#">¿Olvidaste tu contraseña?</a>
+                <a href="{{ route('password.forgot') }}">¿Olvidaste tu contraseña?</a>
             </div>
             {{-- Login route --}}
             <button class="login-btn" type="submit">
                 Iniciar sesión
             </button>
+            
+            {{-- Go back landing --}}
+            <a href="{{ route('welcome') }}" class="back-btn">
+                Volver
+            </a>
         </form>
         {{-- Create Account --}}
         <div class="register">

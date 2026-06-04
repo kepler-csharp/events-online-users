@@ -14,7 +14,7 @@ class WelcomeController extends Controller
         return view('welcome');
     }
 
-  public function showEvents()
+    public function showEvents()
     {
         try {
             $eventsResponse = Http::get(config('services.auth_service.url') . '/api/events');

@@ -198,7 +198,7 @@
 </section>
 
 {{-- SEARCH --}}
-<div id="search">
+{{-- <div id="search">
     <div class="container">
         <div class="search-box">
             <h5><i class="bi bi-search me-2" style="color:var(--orange)"></i>Encuentra tu evento</h5>
@@ -233,7 +233,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 {{-- EVENTS --}}
 <section id="events">
@@ -343,6 +343,13 @@
                     ],
                     [
                         'n' => '3',
+                        'icon' => 'bi-credit-card-fill',
+                        'title' => '¡Reserva tu asiento!',
+                        'desc' =>
+                            'Recibe la facilidad de poder pagar en cualquier medio 100% seguro!',
+                    ],
+                    [
+                        'n' => '4',
                         'icon' => 'bi-qr-code-scan',
                         'title' => '¡Disfruta el evento!',
                         'desc' =>
@@ -351,7 +358,10 @@
                 ];
             @endphp
             @foreach ($steps as $s)
-                <div class="col-md-4">
+                @php
+                    $colum = count($s) -1;
+                @endphp
+                <div class="col-md-{{ $colum }}">
                     <div class="step-num">{{ $s['n'] }}</div>
                     <i class="bi {{ $s['icon'] }}"
                         style="font-size:2rem;color:var(--pastel);margin-bottom:.75rem;display:block"></i>
@@ -468,7 +478,7 @@
 
                     <div class="row align-items-center">
 
-                        <div class="col-md-8">
+                        <div class="col-md-12">
 
                             <div class="event-prices">
 
@@ -481,7 +491,7 @@
 
                             </div>
 
-                            <p class="text-muted mb-0">
+                            <p class="text-muted fw-bolder mb-0 p-3 ms-2 me-2">
                                 {{ $e['description'] }}
                             </p>
 
@@ -503,9 +513,11 @@
                             <div class="ticket-option-card mb-4">
 
                                 <h5 class="fw-bold">
+                                    En: <p>{{ $e['venueName'] }}</p><br />
                                     Show del
-                                    {{ \Carbon\Carbon::parse($shows['startTime'])->format('d M Y') }}
+                                    {{ \Carbon\Carbon::parse($shows['startTime'])->format('d M Y') }}<br />
                                 </h5>
+                                
 
                                 <p>
                                     <b>Desde:</b>

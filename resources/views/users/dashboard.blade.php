@@ -42,9 +42,9 @@
         <a href="{{ route('profile') }}" class="nav-item">
             <i class="bi bi-person"></i> Mi Perfil
         </a>
-        <a href="#" class="nav-item">
+{{--         <a href="#" class="nav-item">
             <i class="bi bi-gear"></i> Configuración
-        </a>
+        </a> --}}
 
         <div class="sidebar-spacer"></div>
 
@@ -98,7 +98,7 @@
                 <p>Aquí están tus eventos y entradas registradas.</p>
             </div>
             <div class="topbar-right">
-                <div class="profile-pill">
+{{--                 <div class="profile-pill">
                     <div class="p-avatar">
                         @if (session('user.avatar'))
                             <img src="{{ session('user.avatar') }}" alt="foto">
@@ -110,7 +110,7 @@
                         <div class="p-name">{{ session('user.name', 'Usuario') }}</div>
                         <div class="p-email">{{ session('user.email', '') }}</div>
                     </div>
-                </div>
+                </div> --}}
                 <form action="{{ route('logout') }}" method="POST" style="display:inline">
                     @csrf
                     <button type="submit" class="btn-logout">
