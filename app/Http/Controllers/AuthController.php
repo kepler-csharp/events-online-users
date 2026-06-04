@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Http;
 use App\Services\AuthService;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -44,10 +42,11 @@ class AuthController extends Controller
                         'email' => $payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
                         'name' => $payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
                         'role' => $payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
-                    ]
+                    ],
                 ]);
+
                 // Redirect to dashboard or intended page
-                return redirect()->intended('/dashboard')->withErrors(['success' => 'Bienvenido. '. session('user.name')]); // Redirect to dashboard or intended page
+                return redirect()->intended('/dashboard')->withErrors(['success' => 'Bienvenido. '.session('user.name')]); // Redirect to dashboard or intended page
             case 401:
                 // Authentication failed
                 return back()->withErrors(['error' => 'Invalid email or password.']);
@@ -66,7 +65,7 @@ class AuthController extends Controller
     {
         $response = $this->authService->createCustomer($request);
 
-        switch($response->status()){
+        switch ($response->status()) {
             case 200:
                 $data = $response->json();
                 // Store the token in session or cookie as needed
@@ -75,8 +74,9 @@ class AuthController extends Controller
                         'email' => $request['email'],
                         'name' => $request['fullName'],
                         'role' => 'customer',
-                    ]
+                    ],
                 ]);
+
                 return redirect()->intended('login')
                     ->with(['success' => 'Customer created successfully. Please login to continue.']);
                 break;
@@ -85,29 +85,33 @@ class AuthController extends Controller
                 /* dd('desde 400',$response->json()); */
                 // Function refactoring needed to handle validation errors from the auth service
                 /* return back()->withErrors(['error' => 'Password must have at least 8 characters.'.$response->json()]); */
-                
-                $descriptionErr = collect($response->json())
-                    ->pluck('description');
-                /* dd('desde 400',$response->json(), $descriptionErr);  */
+
+                $errors = collect($response->json())
+                    ->pluck('description')
+                    ->toArray(); // ✅ Convertir a array plano
+
                 return back()
                     ->withErrors([
-                        'api_error' => $descriptionErr
+                        'api_error' => $errors,
                     ])
                     ->withInput();
-                    
+
                 break;
             case 500:
-                dd('desde 500',$response->json());
-                //Somenthing went wrong
-                return back()->withErrors(['error' => 'Somenthing went wrong.'.$response->json()]);
+                $errors = collect($response->json())
+                    ->pluck('description')
+                    ->toArray(); // ✅ Convertir a array plano
+
+                return back()->withErrors(['api_error' => $errors]);
                 break;
             default:
-                dd('desde default',$response->json());
-                //Somenthing else went wrong
+                dd('desde default', $response->json());
+
+                // Somenthing else went wrong
                 return back()->withErrors(['error' => 'Somenthing else went wrong.'.$response->json()]);
                 break;
         }
-        
+
     }
 
     public function logout()
@@ -117,10 +121,10 @@ class AuthController extends Controller
         // Clear the authentication token from session
         session()->forget(['auth_token', 'user']);
 
-        switch($response->status()){
+        switch ($response->status()) {
             case 200:
-                    // Logout successful
-                    return redirect()->route('welcome')->withErrors(['success' => 'Session cerrada exitosamente.']);
+                // Logout successful
+                return redirect()->route('welcome')->withErrors(['success' => 'Session cerrada exitosamente.']);
                 break;
             case 401:
                 // Unauthorized, token might be invalid or expired
@@ -134,6 +138,4 @@ class AuthController extends Controller
         }
 
     }
-
-
 }

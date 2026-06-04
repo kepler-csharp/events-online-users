@@ -22,20 +22,22 @@
     <div class="login-card">
         @if ($errors->has('error') || $errors->has('api_error'))
             <div class="login-alert">
-
                 <div class="login-alert-icon me-1">
                     <i class="bi bi-exclamation-triangle-fill"></i>
                 </div>
 
                 <div class="login-alert-content">
                     <span>Ups! Intenta de nuevo</span>
-
                     <ul class="mb-0 mt-2 ms-1">
-                        @foreach ($errors->get('error') as $message)
+                        @foreach ($errors->get('error') ?? [] as $message)
                             <span class="mt-1 d-block">{{ $message }}</span>
                         @endforeach
-                        @foreach ($errors->get('api_error') as $message)
-                            <span class="mt-1 d-block">{{ $message }}</span>
+
+                        @foreach ($errors->get('api_error') ?? [] as $message)
+                            {{-- $message puede ser string o array si la API anida más --}}
+                            <span class="mt-1 d-block">
+                                {{ is_array($message) ? implode(', ', $message) : $message }}
+                            </span>
                         @endforeach
                     </ul>
                 </div>
@@ -43,7 +45,6 @@
                 <button type="button" class="login-alert-close" onclick="this.parentElement.remove()">
                     <i class="bi bi-x"></i>
                 </button>
-
             </div>
         @endif
 
