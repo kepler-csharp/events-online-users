@@ -616,7 +616,7 @@
                     @endif
 
                     <div class="col-12 d-flex justify-content-end">
-                        <button class="btn btn-outline-secondary" type="button" data-dismiss="modal">
+                        <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">
                             <i class="bi bi-arrow-left-short"></i>
                             Volver
                         </button>
